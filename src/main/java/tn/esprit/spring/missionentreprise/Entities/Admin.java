@@ -13,7 +13,7 @@ import java.util.Date;
 public class Admin {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idAd ;
+    private long idAd ;
 
     private String nomAd ;
     private String prenomAd ;

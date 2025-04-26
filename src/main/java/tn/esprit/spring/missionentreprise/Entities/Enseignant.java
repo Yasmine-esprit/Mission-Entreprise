@@ -13,7 +13,7 @@ import java.time.LocalDate;
 public class Enseignant {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idEns;
+    private long idEns;
 
     private String nomEns;
     private String prenomEns;
