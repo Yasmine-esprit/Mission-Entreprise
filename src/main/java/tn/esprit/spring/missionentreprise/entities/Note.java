@@ -1,4 +1,4 @@
-package entities;
+package tn.esprit.spring.missionentreprise.entities;
 
 
 import jakarta.persistence.*;
@@ -18,16 +18,13 @@ import org.springframework.boot.autoconfigure.web.WebProperties;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 
 
-public class Critere {
+public class Note {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idCritere;
+    private Long idNote;
     @Column(nullable = false)
-    private String descriptionCritere;
-    @Column(nullable = false)
-    private float noteMaxCritere;
-    StatusValidation statusValidation;
-
+    private float valeurNote;
+    private String commentaireNote;
 
 
 }

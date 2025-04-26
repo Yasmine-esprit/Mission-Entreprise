@@ -1,4 +1,4 @@
-package entities;
+package tn.esprit.spring.missionentreprise.entities;
 
 
 import jakarta.persistence.*;
@@ -18,13 +18,13 @@ import org.springframework.boot.autoconfigure.web.WebProperties;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 
 
-public class Note {
+public class SousCritere {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idNote;
+    private Long idSousCritere;
     @Column(nullable = false)
-    private float valeurNote;
-    private String commentaireNote;
+    private String descriptionSousCritere;
+
 
 
 }
