@@ -1,4 +1,4 @@
-package tn.esprit.spring.missionentreprise.entities;
+package tn.esprit.spring.missionentreprise.Entities;
 
 
 import jakarta.persistence.*;
