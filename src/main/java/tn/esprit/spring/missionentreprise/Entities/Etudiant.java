@@ -13,7 +13,7 @@ import java.time.LocalDate;
 public class Etudiant {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idEtud;
+    private long idEtud;
 
     private String nom;
     private String prenom;
