@@ -1,12 +1,11 @@
 //Module Gestion User
-
 package tn.esprit.spring.missionentreprise.Entities;
+
 
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDate;
 
 
 @Entity
@@ -18,9 +17,9 @@ import java.time.LocalDate;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 
+public class GroupeMsg {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Long idGrpMsg;
 
-public class Admin extends User{
-
-   LocalDate DateAjou;
-   Boolean superadmin;
 }

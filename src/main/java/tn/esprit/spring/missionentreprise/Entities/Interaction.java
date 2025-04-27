@@ -1,4 +1,4 @@
-//Module Gestion User
+//Module Gestion Depot
 
 package tn.esprit.spring.missionentreprise.Entities;
 
@@ -18,9 +18,16 @@ import java.time.LocalDate;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 
+public class Interaction {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Long idInteraction;
+    LocalDate dateInteraction;
+    TypeInteraction typeInteraction;
 
-public class Admin extends User{
+    @ManyToOne
+    Post post;
 
-   LocalDate DateAjou;
-   Boolean superadmin;
+    @ManyToOne
+    User user;
 }

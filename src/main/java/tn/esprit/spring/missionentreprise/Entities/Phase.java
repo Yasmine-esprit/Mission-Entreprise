@@ -1,37 +1,53 @@
+//Module Gestion Organisation
+
 package tn.esprit.spring.missionentreprise.Entities;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.cglib.core.Local;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
+
+@Entity
 @Getter
 @Setter
-@Entity
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
+
 public class Phase {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idPhase;
+    Long idPhase;
 
     @NotNull
-    private String titrePhase;
+    String titrePhase;
 
     @NotNull
-    private String description;
+    String description;
 
-    private Date dateDebut;
-    private Date dateFin;
+    LocalDate dateDebut;
+    LocalDate dateFin;
 
     @Enumerated(EnumType.STRING)
-    private Statut statut;
+    Statut statut;
 
     @ManyToOne
-    private Projet projet;
+    Module module;
 
-    @OneToMany(mappedBy = "phase")
-    private List<Tache> taches;
+    @OneToMany(mappedBy = "phase", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<Tache> taches = new ArrayList<>();
+
+
+
+
+
 }

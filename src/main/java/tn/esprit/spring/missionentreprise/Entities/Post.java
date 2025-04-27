@@ -1,14 +1,12 @@
-//Module Gestion Organisation
+//Module Gestion Depot
 
 package tn.esprit.spring.missionentreprise.Entities;
 
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -21,23 +19,18 @@ import java.util.List;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 
-public class Theme {
-
+public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long idTheme;
-
-    @NotNull
-    String titreTheme;
-
-    @NotNull
-    String description;
+    Long idPost;
+    String titrePost;
+    String contenuPost;
+    LocalDate datePost;
 
     @ManyToOne
-    Module module;
+    User user;
 
-    @OneToMany(mappedBy = "theme", cascade = CascadeType.ALL, orphanRemoval = true)
-    List <Projet> projets = new ArrayList<>();
-
-
+    @OneToMany(mappedBy = "post")
+    List<Interaction> interactions;
 }
+

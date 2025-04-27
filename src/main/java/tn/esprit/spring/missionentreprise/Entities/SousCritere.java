@@ -1,9 +1,13 @@
-package tn.esprit.spring.missionentreprise.entities;
+// Module Gestion Evaluation
+
+package tn.esprit.spring.missionentreprise.Entities;
 
 
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
+import javax.crypto.Cipher;
 
 
 @Entity
@@ -16,15 +20,17 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 
 
-public class Critere {
+public class SousCritere {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idCritere;
+    Long idSousCritere;
     @Column(nullable = false)
-    private String descriptionCritere;
-    @Column(nullable = false)
-    private float noteMaxCritere;
-    StatusValidation statusValidation;
+    String descriptionSousCritere;
+    Long noteMax;
+    Long noteMin;
+
+    @ManyToOne
+    Critere critere;
 
 
 

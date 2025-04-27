@@ -1,20 +1,24 @@
+//Module Gestion User
+
 package tn.esprit.spring.missionentreprise.Entities;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
+
+
 
 @Entity
 @Getter
 @Setter
-@Table(name = "coordinateur")
-public class Coordinateur {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idCoor ;
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 
-    private String nomCoor ;
-    private String prenomCoor ;
+@Table(name = "coordinateur")
+public class Coordinateur extends User{
     private String departement;
     private String anneeExperience;
 

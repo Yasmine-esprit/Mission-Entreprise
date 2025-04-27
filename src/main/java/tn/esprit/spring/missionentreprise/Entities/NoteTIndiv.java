@@ -1,11 +1,10 @@
-package tn.esprit.spring.missionentreprise.entities;
-
+//Module Gestion Evaluation
+package tn.esprit.spring.missionentreprise.Entities;
 
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDate;
 
 @Entity
 @Getter
@@ -17,10 +16,18 @@ import java.time.LocalDate;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 
 
-public class Evaluation {
+public class NoteTIndiv {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idEvaluation;
-    private String nomEvaluation;
-    private LocalDate dateEvaluation;
+    Long noteIndivId;
+
+    @ManyToOne
+    GrilleEvaluation grilleEvaluation;
+
+    @ManyToOne
+    Enseignant enseignant;
+
+    @ManyToOne
+    Etudiant etudiant;
+
 }
