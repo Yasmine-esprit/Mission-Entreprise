@@ -6,6 +6,8 @@ package tn.esprit.spring.missionentreprise.Entities;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -30,7 +32,7 @@ public class Critere {
     float noteMaxCritere;
 
     @OneToMany(mappedBy = "critere", cascade = CascadeType.ALL, orphanRemoval = true)
-    List <SousCritere> sousCriteres;
+    List <SousCritere> sousCriteres = new ArrayList<>();
 
 
 

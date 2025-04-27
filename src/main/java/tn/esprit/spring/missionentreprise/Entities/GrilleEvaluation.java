@@ -8,6 +8,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -34,10 +35,10 @@ public class GrilleEvaluation {
     Phase phase;
 
     @OneToMany(mappedBy = "grilleEvaluation",  cascade = CascadeType.ALL, orphanRemoval = true)
-    List<NoteTIndiv> noteIndiv;
+    List<NoteTIndiv> noteIndiv = new ArrayList<>();
 
     @OneToMany(mappedBy = "grilleEvaluation",  cascade = CascadeType.ALL, orphanRemoval = true)
-    List<NoteTGrp> noteGrp;
+    List<NoteTGrp> noteGrp = new ArrayList<>();
 
     @OneToMany(mappedBy = "grilleEvaluation")
     List<Critere> criteres;
