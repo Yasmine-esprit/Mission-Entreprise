@@ -1,7 +1,7 @@
+
 //Module Gestion de l'espace collaboratif
 
 package tn.esprit.spring.missionentreprise.Entities;
-
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -9,7 +9,6 @@ import lombok.experimental.FieldDefaults;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDate;
-import java.util.List;
 
 
 @Entity
@@ -21,17 +20,18 @@ import java.util.List;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 
-public class Tache {
+public class SousTache {
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long idTache;
+    Long idSousTache;
 
     @NotNull
-    String titreTache;
+    String titreSousTache;
 
     @NotNull
-    String descriptionTache;
+    String descriptionSousTache;
 
     LocalDate dateDebut;
     LocalDate dateFin;
@@ -40,14 +40,5 @@ public class Tache {
     Statut statut;
 
     @ManyToOne
-    Projet projet;
-
-    @ManyToOne
-    Phase phase;
-
-    @ManyToOne
-    Etudiant etudiant;
-
-    @OneToMany(mappedBy = "tache")
-    List<SousTache> sousTaches;
+    Tache tache;
 }

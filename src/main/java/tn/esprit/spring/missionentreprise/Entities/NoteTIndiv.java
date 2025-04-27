@@ -1,11 +1,9 @@
+//Module Gestion Evaluation
 package tn.esprit.spring.missionentreprise.Entities;
-
 
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.hibernate.tool.schema.spi.SchemaTruncator;
-import org.springframework.boot.autoconfigure.web.WebProperties;
 
 
 @Entity
@@ -18,13 +16,18 @@ import org.springframework.boot.autoconfigure.web.WebProperties;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 
 
-public class Note {
+public class NoteTIndiv {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idNote;
-    @Column(nullable = false)
-    private float valeurNote;
-    private String commentaireNote;
+    Long noteIndivId;
 
+    @ManyToOne
+    GrilleEvaluation grilleEvaluation;
+
+    @ManyToOne
+    Enseignant enseignant;
+
+    @ManyToOne
+    Etudiant etudiant;
 
 }

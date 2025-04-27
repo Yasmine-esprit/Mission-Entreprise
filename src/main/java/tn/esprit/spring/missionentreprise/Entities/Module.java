@@ -5,10 +5,7 @@ package tn.esprit.spring.missionentreprise.Entities;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.jetbrains.annotations.NotNull;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -21,23 +18,18 @@ import java.util.List;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 
-public class Theme {
-
+public class Module {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long idTheme;
-
-    @NotNull
-    String titreTheme;
-
-    @NotNull
-    String description;
+    Long idModule;
+    String nomModule;
 
     @ManyToOne
-    Module module;
+    Niveau niveau;
 
-    @OneToMany(mappedBy = "theme", cascade = CascadeType.ALL, orphanRemoval = true)
-    List <Projet> projets = new ArrayList<>();
+    @OneToMany(mappedBy = "module")
+    List <Phase> phases;
 
-
+    @OneToMany(mappedBy = "module")
+    List <Theme> themes;
 }

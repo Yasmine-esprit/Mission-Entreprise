@@ -1,12 +1,11 @@
-//Module Gestion User
-
+//Module Gestion Depot
 package tn.esprit.spring.missionentreprise.Entities;
 
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 
 @Entity
@@ -18,9 +17,12 @@ import java.time.LocalDate;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 
-
-public class Admin extends User{
-
-   LocalDate DateAjou;
-   Boolean superadmin;
+public class Commit {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Long idCommit;
+    String titreCommit;
+    LocalDateTime dateCommit;
+    @ManyToOne
+    Repo repo;
 }

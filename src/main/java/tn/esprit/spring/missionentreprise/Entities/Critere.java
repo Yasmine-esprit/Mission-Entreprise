@@ -1,15 +1,15 @@
-//Module Gestion Organisation
+// Module Gestion Evaluation
 
 package tn.esprit.spring.missionentreprise.Entities;
+
 
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.jetbrains.annotations.NotNull;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+
 
 
 @Entity
@@ -21,23 +21,19 @@ import java.util.List;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 
-public class Theme {
 
+public class Critere {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long idTheme;
+    Long idCritere;
+    @Column(nullable = false)
+    String descriptionCritere;
+    @Column(nullable = false)
+    float noteMaxCritere;
 
-    @NotNull
-    String titreTheme;
+    @OneToMany(mappedBy = "critere", cascade = CascadeType.ALL, orphanRemoval = true)
+    List <SousCritere> sousCriteres = new ArrayList<>();
 
-    @NotNull
-    String description;
-
-    @ManyToOne
-    Module module;
-
-    @OneToMany(mappedBy = "theme", cascade = CascadeType.ALL, orphanRemoval = true)
-    List <Projet> projets = new ArrayList<>();
 
 
 }

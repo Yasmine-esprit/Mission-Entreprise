@@ -1,14 +1,13 @@
-//Module Gestion Organisation
+//Module Gestion Depot
 
 package tn.esprit.spring.missionentreprise.Entities;
 
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.jetbrains.annotations.NotNull;
 
+import javax.swing.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -21,23 +20,19 @@ import java.util.List;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 
-public class Theme {
-
+public class Repo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long idTheme;
+    Long idRepo;
+    String nomRepo;
 
-    @NotNull
-    String titreTheme;
+    @OneToOne
+    Groupe groupe;
 
-    @NotNull
-    String description;
+    @OneToMany(mappedBy = "repo")
+    List <Commit> commits;
 
-    @ManyToOne
-    Module module;
-
-    @OneToMany(mappedBy = "theme", cascade = CascadeType.ALL, orphanRemoval = true)
-    List <Projet> projets = new ArrayList<>();
-
+    @OneToOne
+    SousTache sousTache;
 
 }
