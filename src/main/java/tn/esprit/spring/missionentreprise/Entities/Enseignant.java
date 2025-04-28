@@ -18,7 +18,6 @@ import java.util.List;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 
-@Table(name = "ensignant")
 public class Enseignant extends User{
     String grade;
     String demainRecherche; // Ex: L3, M1, M2
