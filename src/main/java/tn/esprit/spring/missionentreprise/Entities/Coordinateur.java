@@ -17,7 +17,6 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 
-@Table(name = "coordinateur")
 public class Coordinateur extends User{
     private String departement;
     private String anneeExperience;

@@ -34,6 +34,9 @@ public class Critere {
     @OneToMany(mappedBy = "critere", cascade = CascadeType.ALL, orphanRemoval = true)
     List <SousCritere> sousCriteres = new ArrayList<>();
 
+    @ManyToOne
+    GrilleEvaluation grilleEvaluation;
+
 
 
 }

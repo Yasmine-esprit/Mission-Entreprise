@@ -27,7 +27,7 @@ public class User {
 
     String nomUser ;
     String prenomUser ;
-    Byte [] photoProfil;
+    //Byte [] photoProfil;   //it generated an error, maybe consider changing the type of the attribute
 
     @OneToMany(mappedBy = "user")
     List <Post> posts;
