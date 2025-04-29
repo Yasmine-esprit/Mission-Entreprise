@@ -5,6 +5,8 @@ package tn.esprit.spring.missionentreprise.Entities;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.SuperBuilder;
+
 
 import java.time.LocalDate;
 
@@ -15,7 +17,9 @@ import java.time.LocalDate;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@SuperBuilder
+
+
 @FieldDefaults(level = AccessLevel.PRIVATE)
 
 
