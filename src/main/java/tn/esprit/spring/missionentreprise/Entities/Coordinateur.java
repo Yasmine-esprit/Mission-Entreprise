@@ -5,6 +5,7 @@ package tn.esprit.spring.missionentreprise.Entities;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.SuperBuilder;
 
 
 
@@ -14,7 +15,8 @@ import lombok.experimental.FieldDefaults;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@SuperBuilder
+
 @FieldDefaults(level = AccessLevel.PRIVATE)
 
 public class Coordinateur extends User{
