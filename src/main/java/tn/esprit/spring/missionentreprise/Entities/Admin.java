@@ -10,13 +10,8 @@ import java.util.Date;
 @Getter
 @Setter
 @Table(name = "admin")
-public class Admin {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long idAd ;
+public class Admin extends User{
 
-    private String nomAd ;
-    private String prenomAd ;
     private Date DateAjou;
     private Boolean superadmin;
 }

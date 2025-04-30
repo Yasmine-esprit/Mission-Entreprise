@@ -10,14 +10,9 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @Table(name = "etudiant")
-public class Etudiant {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long idEtud;
+public class Etudiant extends User {
 
-    private String nom;
-    private String prenom;
-    private String matricule;
+
     private String niveau; // Ex: L3, M1, M2
     private String specialite; // Info, GTR, etc.
     private LocalDate dateNaissance;

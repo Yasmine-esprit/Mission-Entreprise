@@ -8,13 +8,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @Table(name = "coordinateur")
-public class Coordinateur {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idCoor ;
+public class Coordinateur extends User {
 
-    private String nomCoor ;
-    private String prenomCoor ;
     private String departement;
     private String anneeExperience;
 
