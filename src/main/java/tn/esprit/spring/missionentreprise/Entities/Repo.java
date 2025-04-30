@@ -1,12 +1,13 @@
+//Module Gestion Depot
 
-//Module Gestion User
 package tn.esprit.spring.missionentreprise.Entities;
 
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDate;
+
+import java.util.List;
 
 
 @Entity
@@ -18,11 +19,19 @@ import java.time.LocalDate;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 
-public class Message {
+public class Repo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long idMsg ;
-    String contenu;
-    LocalDate dateEnvoi;
-    Boolean lu;
+    Long idRepo;
+    String nomRepo;
+
+    @OneToOne
+    Groupe groupe;
+
+    @OneToMany(mappedBy = "repo")
+    List <Commit> commits;
+
+    @OneToOne
+    SousTache sousTache;
+
 }

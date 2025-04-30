@@ -1,5 +1,5 @@
+//Module Gestion Evaluation
 package tn.esprit.spring.missionentreprise.Entities;
-
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -16,16 +16,18 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 
 
-public class Critere {
+public class NoteTIndiv {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idCritere;
-    @Column(nullable = false)
-    private String descriptionCritere;
-    @Column(nullable = false)
-    private float noteMaxCritere;
-    StatusValidation statusValidation;
+    Long noteIndivId;
 
+    @ManyToOne
+    GrilleEvaluation grilleEvaluation;
 
+    @ManyToOne
+    Enseignant enseignant;
+
+    @ManyToOne
+    Etudiant etudiant;
 
 }

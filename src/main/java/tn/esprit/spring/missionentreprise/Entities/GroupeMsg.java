@@ -1,11 +1,10 @@
 //Module Gestion User
-
 package tn.esprit.spring.missionentreprise.Entities;
+
 
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import lombok.experimental.SuperBuilder;
 
 
 
@@ -15,12 +14,19 @@ import lombok.experimental.SuperBuilder;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@SuperBuilder
-
+@Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 
-public class Coordinateur extends User{
-    private String departement;
-    private String anneeExperience;
+public class GroupeMsg {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Long idGrpMsg;
+    @Lob
+    byte[] imageGroupe;
+
+    GroupAssociation nbrePersonne;
+
+
+
 
 }

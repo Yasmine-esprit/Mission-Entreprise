@@ -1,15 +1,23 @@
+//Module Gestion de l'espace collaboratif
 package tn.esprit.spring.missionentreprise.Entities;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
+import org.springframework.cglib.core.Local;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
+@Entity
 @Getter
 @Setter
-@Entity
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
+
 public class Projet {
 
     @Id
@@ -20,21 +28,27 @@ public class Projet {
     @Column(name = "DescriptionProjet", nullable = false)
     //@Size(min = 10, message = "La description du projet doit contenir au moins 10 caractères.")
     private String descriptionProjet;
-    private Date dateCreation;
+    private LocalDate dateCreation;
     @Enumerated(EnumType.STRING)
-    private Statut statut;
+    private tn.esprit.spring.missionentreprise.Entities.Statut statut;
     @Enumerated(EnumType.STRING)
-    private Visibilite visibilite;
+    private tn.esprit.spring.missionentreprise.Entities.Visibilite visibilite;
 //Associations
 
     @ManyToOne
-    private Theme theme;
+    Theme theme;
 
     @OneToMany(mappedBy = "projet")
-    private List<Phase> phases;
+    List<Tache> taches;
+
+    @OneToOne(mappedBy = "projet")
+    Groupe groupe;
 
     @ManyToOne
-    private Groupe groupe;
+    Enseignant enseignant;
+
+
+
 
     public String getTitreProjet() {
         return titreProjet;
@@ -52,11 +66,11 @@ public class Projet {
         this.descriptionProjet = descriptionProjet;
     }
 
-    public Date getDateCreation() {
+    public LocalDate getDateCreation() {
         return dateCreation;
     }
 
-    public void setDateCreation(Date dateCreation) {
+    public void setDateCreation(LocalDate dateCreation) {
         this.dateCreation = dateCreation;
     }
 

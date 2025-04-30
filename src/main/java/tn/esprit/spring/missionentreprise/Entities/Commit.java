@@ -1,11 +1,11 @@
+//Module Gestion Depot
 package tn.esprit.spring.missionentreprise.Entities;
-
 
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.hibernate.tool.schema.spi.SchemaTruncator;
-import org.springframework.boot.autoconfigure.web.WebProperties;
+
+import java.time.LocalDateTime;
 
 
 @Entity
@@ -17,14 +17,12 @@ import org.springframework.boot.autoconfigure.web.WebProperties;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 
-
-public class Note {
+public class Commit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idNote;
-    @Column(nullable = false)
-    private float valeurNote;
-    private String commentaireNote;
-
-
+    Long idCommit;
+    String titreCommit;
+    LocalDateTime dateCommit;
+    @ManyToOne
+    Repo repo;
 }

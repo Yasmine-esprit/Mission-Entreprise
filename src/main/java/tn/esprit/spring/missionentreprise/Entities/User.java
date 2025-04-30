@@ -1,20 +1,45 @@
 package tn.esprit.spring.missionentreprise.Entities;
 
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
+import lombok.experimental.SuperBuilder;
+
+
+import java.util.List;
+
 
 @Entity
-@Table(name = "user")
 @Getter
 @Setter
-public class User {
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
+@SuperBuilder
+@Inheritance(strategy = InheritanceType.JOINED)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 
+
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long iduser;
+    Long idUser ;
 
-    private String nomUser;
-    private String prenomUser;
-    private String matriculeUser;
+    String nomUser ;
+    String prenomUser ;
+
+    @Lob
+    byte[] photoProfil;
+
+    @OneToMany(mappedBy = "user")
+    List <Post> posts;
+
+    @OneToMany(mappedBy = "user")
+    List <Interaction> interactions;
+
+
+
 }

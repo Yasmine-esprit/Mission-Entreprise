@@ -1,4 +1,5 @@
-//Module Gestion Organisation
+
+//Module Gestion de l'espace collaboratif
 
 package tn.esprit.spring.missionentreprise.Entities;
 
@@ -7,8 +8,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDate;
 
 
 @Entity
@@ -20,23 +20,25 @@ import java.util.List;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 
-public class Theme {
+public class SousTache {
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long idTheme;
+    Long idSousTache;
 
     @NotNull
-    String titreTheme;
+    String titreSousTache;
 
     @NotNull
-    String description;
+    String descriptionSousTache;
+
+    LocalDate dateDebut;
+    LocalDate dateFin;
+
+    @Enumerated(EnumType.STRING)
+    Statut statut;
 
     @ManyToOne
-    Module module;
-
-    @OneToMany(mappedBy = "theme", cascade = CascadeType.ALL, orphanRemoval = true)
-    List <Projet> projets = new ArrayList<>();
-
-
+    Tache tache;
 }

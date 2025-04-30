@@ -1,11 +1,14 @@
-package tn.esprit.spring.missionentreprise.Entities;
+//Module Gestion Depot
 
+package tn.esprit.spring.missionentreprise.Entities;
 
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
+import java.util.List;
+
 
 @Entity
 @Getter
@@ -16,11 +19,18 @@ import java.time.LocalDate;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 
-
-public class Evaluation {
+public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idEvaluation;
-    private String nomEvaluation;
-    private LocalDate dateEvaluation;
+    Long idPost;
+    String titrePost;
+    String contenuPost;
+    LocalDate datePost;
+
+    @ManyToOne
+    User user;
+
+    @OneToMany(mappedBy = "post")
+    List<Interaction> interactions;
 }
+

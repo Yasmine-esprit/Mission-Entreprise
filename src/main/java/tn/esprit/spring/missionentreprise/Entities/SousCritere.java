@@ -1,11 +1,12 @@
-package tn.esprit.spring.missionentreprise.entities;
+// Module Gestion Evaluation
+
+package tn.esprit.spring.missionentreprise.Entities;
 
 
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.hibernate.tool.schema.spi.SchemaTruncator;
-import org.springframework.boot.autoconfigure.web.WebProperties;
+
 
 
 @Entity
@@ -21,9 +22,14 @@ import org.springframework.boot.autoconfigure.web.WebProperties;
 public class SousCritere {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idSousCritere;
+    Long idSousCritere;
     @Column(nullable = false)
-    private String descriptionSousCritere;
+    String descriptionSousCritere;
+    Long noteMax;
+    Long noteMin;
+
+    @ManyToOne
+    Critere critere;
 
 
 
