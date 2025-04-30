@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.Set;
 
 
 @Entity
@@ -26,6 +27,11 @@ public class GroupeMsg {
 
     GroupAssociation nbrePersonne;
 
+    @ManyToMany(mappedBy = "groups")
+    private Set<User> users;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy="groupeMsg")
+    private Set<Message> messages;
 
 
 

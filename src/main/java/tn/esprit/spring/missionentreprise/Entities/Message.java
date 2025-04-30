@@ -25,4 +25,10 @@ public class Message {
     String contenu;
     LocalDate dateEnvoi;
     Boolean lu;
+
+    @ManyToOne
+    GroupeMsg groupeMsg;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    User userMessage;
 }

@@ -10,6 +10,7 @@ import lombok.experimental.SuperBuilder;
 
 
 import java.util.List;
+import java.util.Set;
 
 
 @Entity
@@ -39,6 +40,9 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     List <Interaction> interactions;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    private Set<GroupeMsg> groups;
 
 
 
