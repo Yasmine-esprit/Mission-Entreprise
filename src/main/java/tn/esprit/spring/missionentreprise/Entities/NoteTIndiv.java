@@ -1,12 +1,9 @@
-
-//Module Gestion User
+//Module Gestion Evaluation
 package tn.esprit.spring.missionentreprise.Entities;
 
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.time.LocalDate;
 
 
 @Entity
@@ -18,17 +15,19 @@ import java.time.LocalDate;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 
-public class Message {
+
+public class NoteTIndiv {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long idMsg ;
-    String contenu;
-    LocalDate dateEnvoi;
-    Boolean lu;
+    Long noteIndivId;
 
     @ManyToOne
-    GroupeMsg groupeMsg;
+    GrilleEvaluation grilleEvaluation;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    User userMessage;
+    @ManyToOne
+    Enseignant enseignant;
+
+    @ManyToOne
+    Etudiant etudiant;
+
 }

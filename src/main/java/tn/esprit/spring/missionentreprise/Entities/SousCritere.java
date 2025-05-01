@@ -1,12 +1,12 @@
+// Module Gestion Evaluation
 
-//Module Gestion User
 package tn.esprit.spring.missionentreprise.Entities;
+
 
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDate;
 
 
 @Entity
@@ -18,17 +18,19 @@ import java.time.LocalDate;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 
-public class Message {
+
+public class SousCritere {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long idMsg ;
-    String contenu;
-    LocalDate dateEnvoi;
-    Boolean lu;
+    Long idSousCritere;
+    @Column(nullable = false)
+    String descriptionSousCritere;
+    Long noteMax;
+    Long noteMin;
 
     @ManyToOne
-    GroupeMsg groupeMsg;
+    Critere critere;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    User userMessage;
+
+
 }

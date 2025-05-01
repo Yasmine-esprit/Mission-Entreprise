@@ -1,12 +1,11 @@
-//Module Gestion User
-
+//Module Gestion Depot
 package tn.esprit.spring.missionentreprise.Entities;
 
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import lombok.experimental.SuperBuilder;
 
+import java.time.LocalDateTime;
 
 
 @Entity
@@ -15,12 +14,15 @@ import lombok.experimental.SuperBuilder;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@SuperBuilder
-
+@Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 
-public class Coordinateur extends User{
-    private String departement;
-    private String anneeExperience;
-
+public class Commit {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Long idCommit;
+    String titreCommit;
+    LocalDateTime dateCommit;
+    @ManyToOne
+    Repo repo;
 }

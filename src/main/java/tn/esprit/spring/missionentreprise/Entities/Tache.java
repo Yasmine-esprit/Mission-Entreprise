@@ -1,33 +1,53 @@
+//Module Gestion de l'espace collaboratif
+
 package tn.esprit.spring.missionentreprise.Entities;
 
+
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.util.List;
 
+
+@Entity
 @Getter
 @Setter
-@Entity
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
+
 public class Tache {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idTache;
+    Long idTache;
 
     @NotNull
-    private String titreTache;
+    String titreTache;
 
     @NotNull
-    private String description;
+    String descriptionTache;
 
-    private Date dateDebut;
-    private Date dateFin;
+    LocalDate dateDebut;
+    LocalDate dateFin;
 
     @Enumerated(EnumType.STRING)
-    private Statut statut;
+    Statut statut;
 
     @ManyToOne
-    private Phase phase;
+    Projet projet;
+
+    @ManyToOne
+    Phase phase;
+
+    @ManyToOne
+    Etudiant etudiant;
+
+    @OneToMany(mappedBy = "tache")
+    List<SousTache> sousTaches;
 }

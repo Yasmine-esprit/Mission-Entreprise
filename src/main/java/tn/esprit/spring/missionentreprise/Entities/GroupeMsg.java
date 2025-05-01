@@ -1,12 +1,12 @@
-
 //Module Gestion User
 package tn.esprit.spring.missionentreprise.Entities;
+
 
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDate;
+import java.util.Set;
 
 
 @Entity
@@ -18,17 +18,21 @@ import java.time.LocalDate;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 
-public class Message {
+public class GroupeMsg {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long idMsg ;
-    String contenu;
-    LocalDate dateEnvoi;
-    Boolean lu;
+    Long idGrpMsg;
+    @Lob
+    byte[] imageGroupe;
 
-    @ManyToOne
-    GroupeMsg groupeMsg;
+    GroupAssociation nbrePersonne;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    User userMessage;
+    @ManyToMany(mappedBy = "groups")
+    private Set<User> users;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy="groupeMsg")
+    private Set<Message> messages;
+
+
+
 }
