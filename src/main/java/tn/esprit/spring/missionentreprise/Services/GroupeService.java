@@ -1,37 +1,39 @@
 package tn.esprit.spring.missionentreprise.Services;
 
 import tn.esprit.spring.missionentreprise.Entities.Groupe;
+import tn.esprit.spring.missionentreprise.Entities.GroupeMsg;
 
 import java.util.List;
 
-public class GroupeService implements IServiceGenerique<Groupe> {
+public class GroupeService implements IServiceGenerique<GroupeMsg> {
+
     @Override
-    public Groupe add(Groupe groupe) {
+    public GroupeMsg add(GroupeMsg groupeMsg) {
         return null;
     }
 
     @Override
-    public List<Groupe> addAll(List<Groupe> t) {
+    public List<GroupeMsg> addAll(List<GroupeMsg> t) {
         return List.of();
     }
 
     @Override
-    public List<Groupe> getAll() {
+    public List<GroupeMsg> getAll() {
         return List.of();
     }
 
     @Override
-    public Groupe edit(Groupe groupe) {
+    public GroupeMsg edit(GroupeMsg groupeMsg) {
         return null;
     }
 
     @Override
-    public List<Groupe> editAll(List<Groupe> t) {
+    public List<GroupeMsg> editAll(List<GroupeMsg> t) {
         return List.of();
     }
 
     @Override
-    public void delete(Groupe groupe) {
+    public void delete(GroupeMsg groupeMsg) {
 
     }
 
@@ -46,7 +48,7 @@ public class GroupeService implements IServiceGenerique<Groupe> {
     }
 
     @Override
-    public Groupe getById(Long id) {
+    public GroupeMsg getById(Long id) {
         return null;
     }
 

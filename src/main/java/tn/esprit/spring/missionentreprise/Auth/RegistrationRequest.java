@@ -1,18 +1,18 @@
 package tn.esprit.spring.missionentreprise.Auth;
 import jakarta.validation.constraints.Size;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.ToString;
+import org.springframework.web.multipart.MultipartFile;
+import tn.esprit.spring.missionentreprise.Entities.roleName;
 
 @Getter
 @Setter
-@Builder
 @ToString
+@Builder
+
 public class RegistrationRequest {
 
     @NotEmpty(message = "Firstname is mandatory")
@@ -30,7 +30,9 @@ public class RegistrationRequest {
     @Size(min = 8, message = "Password should be 8 characters long minimum")
     private String password;
 
-    byte[] photoProfil;
+    private MultipartFile photoProfil;
+
+    private roleName role;
 
 
 

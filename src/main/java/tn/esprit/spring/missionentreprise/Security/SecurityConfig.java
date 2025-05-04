@@ -33,14 +33,14 @@ public class SecurityConfig {
         http
                 .cors(cors -> cors.configurationSource(request -> {
                     CorsConfiguration config = new CorsConfiguration();
-                    config.setAllowedOrigins(List.of("*"));
+                    config.setAllowedOrigins(List.of("*"));  // You might want to restrict this to specific origins in production
                     config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                     config.setAllowedHeaders(List.of("*"));
                     return config;
                 }))
-                .csrf(AbstractHttpConfigurer::disable)
+                .csrf(AbstractHttpConfigurer::disable)  // Disable CSRF as you are working with a stateless API
                 .authorizeHttpRequests(req ->
-                        req.requestMatchers("/auth/**").permitAll()
+                        req.requestMatchers("/auth/**", "/register").permitAll()  // Make sure /register is allowed without authentication
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -49,6 +49,7 @@ public class SecurityConfig {
 
         return http.build();
     }
+
 
 
 
