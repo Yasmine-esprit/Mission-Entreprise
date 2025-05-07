@@ -21,6 +21,8 @@ public class NoteTIndiv {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long noteIndivId;
 
+    float noteTIndiv;
+
     @ManyToOne
     GrilleEvaluation grilleEvaluation;
 
