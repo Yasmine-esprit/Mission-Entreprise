@@ -43,6 +43,7 @@ public class AuthenticationController {
         return authenticationService.register(request);
 
     }
+
     @PostMapping("/forget")
     public ResponseEntity<?> forgetPassword( @RequestBody Map<String, String> request) throws MessagingException {
 

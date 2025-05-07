@@ -24,7 +24,7 @@ public class GroupeMsg {
     Long idGrpMsg;
     @Lob
     byte[] imageGroupe;
-
+    @Enumerated(EnumType.STRING)
     GroupAssociation nbrePersonne;
 
     @ManyToMany(mappedBy = "groups")

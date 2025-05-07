@@ -41,6 +41,8 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)  // Disable CSRF as you are working with a stateless API
                 .authorizeHttpRequests(req ->
                         req.requestMatchers("/auth/**", "/register").permitAll()  // Make sure /register is allowed without authentication
+                                .requestMatchers("/messages/**").authenticated()
+                                .requestMatchers("/groupes/**").authenticated()
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
