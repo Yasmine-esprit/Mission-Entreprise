@@ -23,6 +23,8 @@ public class NoteTGrp {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long noteGrpId;
 
+    float noteTGrp;
+
     @ManyToOne
     GrilleEvaluation grilleEvaluation;
 

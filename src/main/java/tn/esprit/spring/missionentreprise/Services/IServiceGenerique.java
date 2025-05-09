@@ -1,8 +1,11 @@
 package tn.esprit.spring.missionentreprise.Services;
 
+import tn.esprit.spring.missionentreprise.Entities.GrilleEvaluation;
+
 import java.util.List;
 
 public interface IServiceGenerique<T> {
+
 
     T add(T t);
     List<T> addAll(List<T> t);

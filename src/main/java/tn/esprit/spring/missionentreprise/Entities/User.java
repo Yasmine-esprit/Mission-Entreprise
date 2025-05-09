@@ -62,8 +62,9 @@ public class User implements UserDetails, Principal {
 
 
     @ManyToMany(fetch = FetchType.EAGER)  // Roles are stored in the database in a many-to-many relationship
-    private Collection<Role> roles;
+     Collection<Role> roles;
 
+     String secret;
     @OneToMany(mappedBy = "user")
     List <Post> posts;
 

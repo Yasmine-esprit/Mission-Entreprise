@@ -31,10 +31,13 @@ public class AuthenticationController {
             @RequestParam("email") String email,
             @RequestParam("password") String password,
             @RequestParam("role") String role,
+
             @RequestParam(value = "photoProfil", required = false) MultipartFile photo) throws MessagingException {
         roleName roleN = roleName.valueOf(role);
+        System.out.println("roleN " + roleN);
         var request = RegistrationRequest.builder().firstname(firstname).lastname(lastname)
-                .email(email).password(password).role(roleN).photoProfil(photo).build();
+                .email(email).password(password).role(roleN)
+                .photoProfil(photo).build();
 
         System.out.println("in contorller" + request.getPhotoProfil().getName());
         return authenticationService.register(request);
@@ -52,6 +55,15 @@ public class AuthenticationController {
             @RequestBody AuthenticationRequest request
     ) {
         return authenticationService.authenticate(request);
+    }
+
+    @PostMapping("/verify-2fa")
+    public ResponseEntity<?> verify2FA(
+            @RequestBody TwoFactorRequest request
+    ) {
+        String email = request.getEmail();
+        String code = request.getCode();
+        return authenticationService.verify2FALogin(email, code);
     }
 
     @PostMapping("/reset-password/{token}")

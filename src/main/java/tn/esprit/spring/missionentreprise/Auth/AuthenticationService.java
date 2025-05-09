@@ -45,6 +45,7 @@ public class AuthenticationService {
     private final EmailService emailService;
     private final TokenRepository tokenRepository;
     private final TokenService tokenService;
+    private final TwoFactorAuthenticationService twoFactorAuthenticationService;
 
 
     @Value("${application.mailing.frontend.activation-url}")
@@ -90,7 +91,7 @@ public class AuthenticationService {
                 .emailUser(request.getEmail())
                 .passwordUser(passwordEncoder.encode(request.getPassword()))
                 .accountLockedUser(false)
-                .enabledUser(false)
+                .enabledUser(false) // Initially, the user is not enabled for 2FA
                 .roles(List.of(userRole))
                 .createdDate(LocalDateTime.now())
                 .photoProfil(photoBytes)
@@ -99,18 +100,30 @@ public class AuthenticationService {
             System.out.println(user.getFullName());
         System.out.println("Photo byte size = " + (photoBytes != null ? photoBytes.length : "null"));
 
+        var jwtToken = jwtService.generateToken(user);
+        AuthenticationResponse.builder()
+                .mfaEnabled(user.isEnabledUser())
+                .token(jwtToken).build();
+        // Generate 2FA secret
+        String secret = twoFactorAuthenticationService.generateSecret();
+
+        // Create the QR code URL for the user to scan with Google Authenticator
+        String qrCodeUrl = twoFactorAuthenticationService.generateQRCode(user.getEmailUser(), secret);
+
+        // Save the 2FA secret in the database
+        user.setSecret(secret);
         // Save the user
         try {
             userRepository.save(user);
         } catch (Exception e) {
             return new ResponseEntity<>("An error occurred while saving the user: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        // Send email validation
-        //sendValidationEmail(user);
-
+//        // Send email validation
+//        sendValidationEmail(user);
 
         // If everything is successful, return 200 OK
-        return new ResponseEntity<>("User registered successfully", HttpStatus.CREATED); // 201 Created
+        return new ResponseEntity<>("User registered successfully. Please scan the QR code with your authenticator app: " +
+                qrCodeUrl , HttpStatus.CREATED);
     }
 
 
@@ -125,6 +138,13 @@ public class AuthenticationService {
 
 
             User user = (User) authentication.getPrincipal();
+
+            // Step 2: Check if 2FA is enabled for the user
+            if (user.isEnabledUser()) {
+                Map<String, String> responseMessage = new HashMap<>();
+                responseMessage.put("message", "Please enter the 2FA code.");
+                return ResponseEntity.ok(responseMessage);
+            }
 
             var claims = new HashMap<String, Object>();
             claims.put("fullName", user.getFullName());
@@ -142,6 +162,7 @@ public class AuthenticationService {
 
             AuthenticationResponse response = AuthenticationResponse.builder()
                     .token(jwtToken)
+                    .mfaEnabled(user.isEnabledUser())
                     .build();
 
             return new ResponseEntity<>(response, HttpStatus.OK);
@@ -154,7 +175,38 @@ public class AuthenticationService {
             return new ResponseEntity<>("Authentication failed: " + ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR); // 500
         }
     }
+    public ResponseEntity<?> verify2FALogin( String email, String code) {
+        User user = userRepository.findByEmailUser(email).orElseThrow(() -> new RuntimeException("User not found"));
 
+        // Check if 2FA is enabled
+        if (!user.isEnabledUser()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("2FA is not enabled for this user.");
+        }
+
+        // Validate the entered TOTP code using the stored secret
+        boolean isValid = twoFactorAuthenticationService.validateCode(user.getSecret(), Integer.parseInt(code));
+        if (isValid) {
+            // Issue JWT or session, granting access
+            var claims = new HashMap<String, Object>();
+            claims.put("fullName", user.getFullName());
+            List<roleName> roleNames = user.getRoles().stream()
+                    .map(Role::getRoleType)
+                    .collect(Collectors.toList());
+
+            claims.put("roles", roleNames);
+
+            String jwtToken = jwtService.generateToken(claims, user);
+
+            AuthenticationResponse response = AuthenticationResponse.builder()
+                    .token(jwtToken)
+                    .mfaEnabled(user.isEnabledUser())
+                    .build();
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Invalid 2FA code.", HttpStatus.UNAUTHORIZED);
+        }
+    }
 
    // @Transactional
     public void activateAccount(String token) throws MessagingException {
