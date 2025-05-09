@@ -2,6 +2,7 @@
 package tn.esprit.spring.missionentreprise.Entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.springframework.cglib.core.Local;
@@ -26,7 +27,7 @@ public class Projet {
     @Column(name = "TitreProjet", nullable = false)
     private String titreProjet;
     @Column(name = "DescriptionProjet", nullable = false)
-    //@Size(min = 10, message = "La description du projet doit contenir au moins 10 caractères.")
+    @Size(min = 10, message = "La description du projet doit contenir au moins 10 caractères.")
     private String descriptionProjet;
     private LocalDate dateCreation;
     @Enumerated(EnumType.STRING)

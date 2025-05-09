@@ -2,18 +2,16 @@
 package tn.esprit.spring.missionentreprise.Services;
 
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tn.esprit.spring.missionentreprise.Entities.Groupe;
 import tn.esprit.spring.missionentreprise.Repositories.GroupeRepository;
-
 import java.util.List;
 
 @Service
 @AllArgsConstructor
 public class GroupeService implements IServiceGenerique<Groupe> {
 
-    @Autowired
+
     private GroupeRepository groupeRepository;
 
     @Override
