@@ -3,7 +3,6 @@
 package tn.esprit.spring.missionentreprise.Services;
 
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tn.esprit.spring.missionentreprise.Entities.Tache;
 import tn.esprit.spring.missionentreprise.Repositories.TacheRepository;
@@ -14,8 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 public class TacheService implements IServiceGenerique<Tache>{
 
-    @Autowired
-    private TacheRepository tacheRepository;
+    private final TacheRepository tacheRepository;
 
     @Override
     public Tache add(Tache tache) {
