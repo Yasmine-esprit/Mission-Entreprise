@@ -33,16 +33,21 @@ public class SecurityConfig {
         http
                 .cors(cors -> cors.configurationSource(request -> {
                     CorsConfiguration config = new CorsConfiguration();
-                    config.setAllowedOrigins(List.of("*"));  // You might want to restrict this to specific origins in production
+                    config.setAllowedOrigins(List.of("http://localhost:4200")); // ✅ Pas '*'
                     config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                     config.setAllowedHeaders(List.of("*"));
+                    config.setAllowCredentials(true); // ✅ Obligatoire si tu as un JWT ou cookie
+                    config.addExposedHeader("Authorization"); // si tu veux que le header soit visible
                     return config;
                 }))
+
                 .csrf(AbstractHttpConfigurer::disable)  // Disable CSRF as you are working with a stateless API
                 .authorizeHttpRequests(req ->
-                        req.requestMatchers("/auth/**", "/register").permitAll()  // Make sure /register is allowed without authentication
+                        req.requestMatchers("/auth/**", "/register","/ws/**").permitAll()  // Make sure /register is allowed without authentication
                                 .requestMatchers("/messages/**").authenticated()
                                 .requestMatchers("/groupes/**").authenticated()
+                                .requestMatchers("/users/**").authenticated()
+
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

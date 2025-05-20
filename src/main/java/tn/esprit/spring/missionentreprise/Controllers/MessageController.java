@@ -4,6 +4,7 @@ import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 import tn.esprit.spring.missionentreprise.Entities.Message;
 import tn.esprit.spring.missionentreprise.Services.MessageService;
@@ -16,14 +17,19 @@ import java.util.Map;
 public class MessageController {
 
     private final MessageService messageService;
+    private final SimpMessagingTemplate messagingTemplate;
 
 
 
     @PostMapping("/envoyerMsg/{groupeid}")
-    public ResponseEntity<?> envoyerMessage(@PathVariable ("groupeid") Long groupeId, @RequestBody Message message) throws MessagingException {
-
-        return messageService.envoyerMessage(groupeId,message);
+    public ResponseEntity<Message> envoyerMessage(
+            @PathVariable Long groupeid,
+            @RequestBody Message message
+    ) {
+        Message saved = messageService.saveMessage(groupeid, message);
+        return ResponseEntity.ok(saved);
     }
+
 
     @GetMapping
     public ResponseEntity<?> getMessagesBygroup(){

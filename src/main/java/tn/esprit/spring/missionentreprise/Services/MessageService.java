@@ -1,10 +1,13 @@
 package tn.esprit.spring.missionentreprise.Services;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import tn.esprit.spring.missionentreprise.Entities.GroupeMsg;
 import tn.esprit.spring.missionentreprise.Entities.Message;
 import tn.esprit.spring.missionentreprise.Entities.User;
@@ -42,6 +45,7 @@ public class MessageService implements IServiceGenerique<Message> {
     private final MessageRepository messageRepository;
     private final UserRepository userRepository;
     private final GroupeMsgRepository groupeMsgRepository;
+  private final SimpMessagingTemplate messagingTemplate;
 
     //methode personnalisée
     public ResponseEntity<?> envoyerMessage(Long groupeId, Message message) {
@@ -64,6 +68,8 @@ public class MessageService implements IServiceGenerique<Message> {
             message.setGroupeMsg(groupeMsg); // Associate the message with the group
             Message sentMessage = add(message); // Save the message
 
+            // Publish via WebSocket to subscribers on "/topic/messages"
+            messagingTemplate.convertAndSend("/topic/messages", message);
             return new ResponseEntity<>("Message envoyé avec succès", HttpStatus.OK);
 
         } catch (Exception e) {
@@ -125,6 +131,49 @@ public class MessageService implements IServiceGenerique<Message> {
 
         return messageRepository.save(msg);
     }
+
+    // In MessageService.java
+
+    @Transactional
+    public Message saveMessage(Long groupeId, Message message) {
+        // 1) fetch and set the GroupeMsg
+        GroupeMsg groupe = groupeMsgRepository.findById(groupeId.intValue())
+                .orElseThrow(() -> new EntityNotFoundException("Group not found " + groupeId));
+        message.setGroupeMsg(groupe);
+
+        // 2) fetch/set the User from security context
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByEmailUser(email)
+                .orElseThrow(() -> new EntityNotFoundException("User not found: " + email));
+        message.setUserMessage(user);
+
+        // 3) set date, etc. if needed
+        message.setDateEnvoi(LocalDate.now());
+
+        // 4) save and return
+        return messageRepository.save(message);
+    }
+
+    @Transactional
+    public Message saveMessageWithPayloadUser(Long groupeId, Message message) {
+        // 1) fetch group
+        GroupeMsg groupe = groupeMsgRepository.findById(groupeId.intValue())
+                .orElseThrow(() -> new EntityNotFoundException("Group not found " + groupeId));
+        message.setGroupeMsg(groupe);
+
+        // 2) fetch user by payload id, not SecurityContext
+        Long payloadUserId = message.getUserMessage().getIdUser();
+        User user = userRepository.findById(payloadUserId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found: " + payloadUserId));
+        message.setUserMessage(user);
+
+        // 3) set date
+        message.setDateEnvoi(LocalDate.now());
+
+        // 4) save
+        return messageRepository.save(message);
+    }
+
 
 
     @Override

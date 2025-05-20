@@ -1,9 +1,6 @@
 package tn.esprit.spring.missionentreprise.Utils;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 
@@ -11,6 +8,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Getter
  @Setter
+@NoArgsConstructor
 public class MessageDto {
     private Long idMsg;
     private String contenu;

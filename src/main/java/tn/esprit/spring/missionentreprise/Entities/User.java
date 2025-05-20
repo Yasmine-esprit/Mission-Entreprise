@@ -1,5 +1,8 @@
 package tn.esprit.spring.missionentreprise.Entities;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -18,6 +21,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -33,7 +37,9 @@ import java.util.stream.Collectors;
 @Inheritance(strategy = InheritanceType.JOINED)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @EntityListeners(AuditingEntityListener.class)
-
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "idUser")
 public class User implements UserDetails, Principal {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -61,8 +67,9 @@ public class User implements UserDetails, Principal {
     byte[] photoProfil;
 
 
-    @ManyToMany(fetch = FetchType.EAGER)  // Roles are stored in the database in a many-to-many relationship
-     Collection<Role> roles;
+    @ManyToMany(fetch = FetchType.EAGER)// Roles are stored in the database in a many-to-many relationship
+
+    Collection<Role> roles;
 
      String secret;
     @OneToMany(mappedBy = "user")
@@ -71,8 +78,14 @@ public class User implements UserDetails, Principal {
     @OneToMany(mappedBy = "user")
     List <Interaction> interactions;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    private Set<GroupeMsg> groups;
+    @ManyToMany
+    @JoinTable(
+            name = "user_groups",
+            joinColumns = @JoinColumn(name = "users_id_user"),
+            inverseJoinColumns = @JoinColumn(name = "groups_id_grp_msg")
+    )
+    private Set<GroupeMsg> groups = new HashSet<>();
+
 
 
     @Override

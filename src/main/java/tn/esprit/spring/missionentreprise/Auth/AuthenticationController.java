@@ -24,25 +24,16 @@ public class AuthenticationController {
 
 
     @PostMapping("/register")
-
-    public ResponseEntity<String> register(
-            @RequestParam("firstname") String firstname,
-            @RequestParam("lastname") String lastname,
-            @RequestParam("email") String email,
-            @RequestParam("password") String password,
-            @RequestParam("role") String role,
-
-            @RequestParam(value = "photoProfil", required = false) MultipartFile photo) throws MessagingException {
-        roleName roleN = roleName.valueOf(role);
-        System.out.println("roleN " + roleN);
-        var request = RegistrationRequest.builder().firstname(firstname).lastname(lastname)
-                .email(email).password(password).role(roleN)
-                .photoProfil(photo).build();
-
-        System.out.println("in contorller" + request.getPhotoProfil().getName());
+    public ResponseEntity<String> register(@ModelAttribute RegistrationRequest request) throws MessagingException {
+        System.out.println("mat " + request.getMatricule());
         return authenticationService.register(request);
-
     }
+
+    @PutMapping("/enable/{email}")
+    public ResponseEntity<String> enable(@PathVariable("email") String email) throws MessagingException {
+        return authenticationService.enable(email);
+    }
+
 
     @PostMapping("/forget")
     public ResponseEntity<?> forgetPassword( @RequestBody Map<String, String> request) throws MessagingException {

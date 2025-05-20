@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import tn.esprit.spring.missionentreprise.Entities.GroupAssociation;
 import tn.esprit.spring.missionentreprise.Entities.GroupeMsg;
 import tn.esprit.spring.missionentreprise.Entities.Message;
@@ -22,39 +23,49 @@ public class GroupeMsgService implements IServiceGenerique<GroupeMsg> {
     private final UserRepository userRepository;
 
 
-    public ResponseEntity<?> creeGroupeMsg (Set<Long> userIds) {
+    public ResponseEntity<?> creeGroupeMsg(Set<Long> userIds) {
 
-        // 1. Récupération de l'utilisateur connecté
+        System.out.println("user ids " + userIds);
+
+        // 1. Récupérer utilisateur connecté
         String emailUser = SecurityContextHolder.getContext().getAuthentication().getName();
         User currentUser = userRepository.findByEmailUser(emailUser)
                 .orElseThrow(() -> new UsernameNotFoundException("Utilisateur non trouvé"));
-        System.out.println("user connect " + currentUser.getFullName() + " " + currentUser.getIdUser());
-        // 2. Ajout de l'utilisateur connecté à la liste si absent
+
+        System.out.println("Utilisateur connecté : " + currentUser.getFullName() + " " + currentUser.getIdUser());
+
+        // 2. Ajouter utilisateur connecté à la liste
         userIds.add(currentUser.getIdUser());
 
         Set<User> users = new HashSet<>(userRepository.findAllById(userIds));
 
-        System.out.println("📋 Liste des utilisateurs dans le groupe :");
+        System.out.println("📋 Membres du groupe :");
         users.forEach(user -> System.out.println("👤 " + user.getIdUser() + " - " + user.getEmailUser()));
-        System.out.println("size " + users.size());
+        System.out.println("Total utilisateurs : " + users.size());
 
+        // 3. Créer le groupe sans lier les utilisateurs tout de suite
         GroupeMsg groupeMsg = GroupeMsg.builder()
                 .imageGroupe(null)
-                .users(users)
+                .users(new HashSet<>()) // on vide pour l'instant
                 .nbrePersonne(users.size() == 2 ? GroupAssociation.ONE_TO_ONE : GroupAssociation.MANY_TO_MANY)
                 .build();
 
-        // Synchronisation relation bidirectionnelle
-        users.forEach(user -> user.getGroups().add(groupeMsg));
-        userRepository.saveAll(users);
+        // 4. Sauvegarder d'abord le groupe pour obtenir son ID
+        groupeMsg = groupeMsgRepository.save(groupeMsg); // <- Important !
 
+        // 5. Lier les utilisateurs au groupe et vice versa
+        for (User user : users) {
+            user.getGroups().add(groupeMsg);     // relation User → Groupe
+            groupeMsg.getUsers().add(user);      // relation Groupe → User
+        }
 
-        groupeMsgRepository.save(groupeMsg);
+        // 6. Sauvegarder les relations bidirectionnelles
+        groupeMsgRepository.save(groupeMsg);     // MàJ des utilisateurs du groupe
+        userRepository.saveAll(users);           // MàJ des groupes de chaque utilisateur
 
-
-        return new ResponseEntity<>("Groupe Cree", HttpStatus.OK);
-
+        return new ResponseEntity<>(groupeMsg, HttpStatus.OK); // tu peux aussi renvoyer le groupe ici
     }
+
 
     public ResponseEntity<?> getUserGroups() {
         try {
@@ -119,20 +130,36 @@ public class GroupeMsgService implements IServiceGenerique<GroupeMsg> {
 
     }
 
+    @Transactional
     @Override
     public void deleteById(Long id) {
-        // Find the group by ID
         GroupeMsg groupeMsg = groupeMsgRepository.findByIdGrpMsg(id)
                 .orElseThrow(() -> new RuntimeException("Group not found with ID: " + id));
 
-        // Optionally, if you want to remove all the user-group associations first
-        for (User user : groupeMsg.getUsers()) {
-            user.getGroups().remove(groupeMsg);  // Remove the group from each user's groups
+        // Copier la liste pour éviter ConcurrentModificationException
+        Set<User> users = new HashSet<>(groupeMsg.getUsers());
+        System.out.println("user ids " + users);
+        // Rompre les associations dans les deux sens
+        for (User user : users) {
+            System.out.println("user gr " + user.getGroups());
+            user.getGroups().remove(groupeMsg); // côté User
+
         }
 
-        // Now, delete the group itself
+
+        groupeMsg.getUsers().clear(); // côté GroupeMsg
+
+        userRepository.saveAll(users);           // Sauvegarde utilisateurs modifiés
+        groupeMsgRepository.save(groupeMsg);     // Sauvegarde groupe sans utilisateurs
+
+        // Maintenant que plus aucune relation n'existe, on peut le supprimer
         groupeMsgRepository.delete(groupeMsg);
     }
+
+
+
+
+
 
 
     @Override
