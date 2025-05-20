@@ -7,6 +7,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 
 @Entity
@@ -26,9 +27,18 @@ public class Message {
     LocalDate dateEnvoi;
     Boolean lu;
 
+    @Lob
+    byte[] audioMessage; // Message vocal sous forme de fichier audio (si présent)
+
+    @Lob
+    byte[] videoMessage; // Message vidéo sous forme de fichier vidéo (si présent)
+
     @ManyToOne
     GroupeMsg groupeMsg;
 
     @ManyToOne(cascade = CascadeType.ALL)
     User userMessage;
+
+    @OneToMany(mappedBy = "message", cascade = CascadeType.ALL)
+    private Set<Reaction> reactions; // Réactions associées à ce message
 }

@@ -1,5 +1,7 @@
 package tn.esprit.spring.missionentreprise.Entities;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -20,6 +22,9 @@ import java.util.List;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @EntityListeners(AuditingEntityListener.class)
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class Role implements GrantedAuthority {
 
     @Id
@@ -29,8 +34,9 @@ public class Role implements GrantedAuthority {
     @Enumerated(EnumType.STRING)
     roleName roleType;
 
-    @ManyToMany(mappedBy = "roles")
+    @ManyToMany(mappedBy = "roles" , fetch = FetchType.LAZY)
     @JsonIgnore
+
     List<User> users;
 
     @CreatedDate

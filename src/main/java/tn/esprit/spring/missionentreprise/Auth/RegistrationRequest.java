@@ -8,6 +8,8 @@ import jakarta.validation.constraints.Size;
 import org.springframework.web.multipart.MultipartFile;
 import tn.esprit.spring.missionentreprise.Entities.roleName;
 
+import java.time.LocalDate;
+
 @Getter
 @Setter
 @ToString
@@ -33,6 +35,23 @@ public class RegistrationRequest {
     private MultipartFile photoProfil;
 
     private roleName role;
+
+
+
+    // Etudiant
+    private String matricule;
+    private String niveau;
+    private String specialite;
+    private LocalDate dateNaissance;
+
+    //enseignant
+    private   String grade;
+    private String demainRecherche; // Ex: L3, M1, M2
+    private String Bureau;
+
+
+    private String departement;
+    private String anneeExperience;
 
 
 
