@@ -11,8 +11,9 @@ import tn.esprit.spring.missionentreprise.Services.SousTacheService;
 
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
-@RequestMapping("/api/soustaches")
+@RequestMapping("/api/sousTaches")
 @AllArgsConstructor
 public class SousTacheController {
 
