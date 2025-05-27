@@ -15,9 +15,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import tn.esprit.spring.missionentreprise.Entities.Role;
-import tn.esprit.spring.missionentreprise.Entities.User;
-import tn.esprit.spring.missionentreprise.Entities.roleName;
+import tn.esprit.spring.missionentreprise.Entities.*;
+import tn.esprit.spring.missionentreprise.Repositories.EtudiantRepository;
 import tn.esprit.spring.missionentreprise.Repositories.RoleRepository;
 import tn.esprit.spring.missionentreprise.Repositories.UserRepository;
 import tn.esprit.spring.missionentreprise.Security.JwtService;
@@ -38,6 +37,7 @@ import java.util.stream.Collectors;
 public class AuthenticationService {
 
     private final UserRepository userRepository;
+    private final EtudiantRepository etudiantRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager; // à ignorer
@@ -114,7 +114,69 @@ public class AuthenticationService {
         user.setSecret(secret);
         // Save the user
         try {
-            userRepository.save(user);
+            // Vérifier si l'utilisateur est un étudiant
+            if ("ETUDIANT".equalsIgnoreCase(request.getRole().toString())) {
+                Etudiant etudiant = new Etudiant();
+                etudiant.setNomUser(request.getFirstname());
+                etudiant.setPrenomUser(request.getLastname());
+                etudiant.setEmailUser(request.getEmail());
+                etudiant.setPasswordUser(passwordEncoder.encode(request.getPassword()));
+                etudiant.setAccountLockedUser(false);
+                etudiant.setEnabledUser(false);
+                etudiant.setCreatedDate(LocalDateTime.now());
+                etudiant.setPhotoProfil(photoBytes);
+                etudiant.setSecret(secret);
+                etudiant.setRoles(List.of(userRole));
+                System.out.println("mat : "+ request.getMatricule());
+                // Champs spécifiques à Etudiant
+                etudiant.setMatricule(request.getMatricule());
+                etudiant.setNiveau(request.getNiveau());
+                etudiant.setSpecialite(request.getSpecialite());
+                etudiant.setDateNaissance(request.getDateNaissance());
+
+                System.out.println("etudiant " + etudiant.getFullName() + "matricule " +
+                        etudiant.getMatricule());
+                userRepository.save(etudiant);
+            } else if ("ENSEIGNANT".equalsIgnoreCase(request.getRole().toString())) {
+                Enseignant enseignant = Enseignant.builder()
+                        .nomUser(request.getFirstname())
+                        .prenomUser(request.getLastname())
+                        .emailUser(request.getEmail())
+                        .passwordUser(passwordEncoder.encode(request.getPassword()))
+                        .accountLockedUser(false)
+                        .enabledUser(false) // Initially, the user is not enabled for 2FA
+                        .roles(List.of(userRole))
+                        .createdDate(LocalDateTime.now())
+                        .photoProfil(photoBytes)
+                        .secret(secret)
+                        .roles(List.of(userRole))
+                        .grade(request.getGrade())
+                        .demainRecherche(request.getDemainRecherche())
+                        .Bureau(request.getBureau())
+                        .build();
+                System.out.println("enseignant " + enseignant.getFullName());
+                userRepository.save(enseignant);
+            }
+            else{
+                Coordinateur coordinateur = Coordinateur.builder()
+                        .nomUser(request.getFirstname())
+                        .prenomUser(request.getLastname())
+                        .emailUser(request.getEmail())
+                        .passwordUser(passwordEncoder.encode(request.getPassword()))
+                        .accountLockedUser(false)
+                        .enabledUser(false) // Initially, the user is not enabled for 2FA
+                        .roles(List.of(userRole))
+                        .createdDate(LocalDateTime.now())
+                        .photoProfil(photoBytes)
+                        .secret(secret)
+                        .roles(List.of(userRole))
+                        .departement(request.getDepartement())
+                        .anneeExperience(request.getAnneeExperience())
+                        .build();
+                System.out.println("coordinateur " + coordinateur.getFullName());
+                userRepository.save(coordinateur);
+            }
+
         } catch (Exception e) {
             return new ResponseEntity<>("An error occurred while saving the user: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -127,6 +189,20 @@ public class AuthenticationService {
     }
 
 
+    public  ResponseEntity<String> enable (String email){
+        Optional<User> userOptional = userRepository.findByEmailUser(email);
+        if (userOptional.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        }
+
+        User user = userOptional.get();
+        user.setEnabledUser(true);
+        userRepository.save(user);
+        return ResponseEntity.ok("User enabled successfully");
+    }
+
+
+
     public ResponseEntity<?> authenticate(AuthenticationRequest request) {
         try {
             Authentication authentication = authenticationManager.authenticate(
@@ -135,16 +211,18 @@ public class AuthenticationService {
                             request.getPassword()
                     )
             );
+            System.out.println(" manager " + authentication.isAuthenticated());
 
 
             User user = (User) authentication.getPrincipal();
 
             // Step 2: Check if 2FA is enabled for the user
-            if (user.isEnabledUser()) {
+            if (user.isEnabledUser() && user.getRoles().stream().noneMatch(role -> role.getRoleType().toString().equals("ADMINISTRATEUR"))) {
                 Map<String, String> responseMessage = new HashMap<>();
                 responseMessage.put("message", "Please enter the 2FA code.");
                 return ResponseEntity.ok(responseMessage);
             }
+
 
             var claims = new HashMap<String, Object>();
             claims.put("fullName", user.getFullName());
