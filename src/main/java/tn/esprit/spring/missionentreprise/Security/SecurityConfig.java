@@ -43,11 +43,42 @@ public class SecurityConfig {
 
                 .csrf(AbstractHttpConfigurer::disable)  // Disable CSRF as you are working with a stateless API
                 .authorizeHttpRequests(req ->
-                        req.requestMatchers("/auth/**", "/register","/ws/**").permitAll()  // Make sure /register is allowed without authentication
+                        req.requestMatchers("/auth/**", "/register","/ws/**").permitAll()  // Public endpoints
+                                
+                                // ✅ Accès utilisateur authentifié (nécessaire pour navbar et profil)
+                                .requestMatchers("/users/me").authenticated()
+                                .requestMatchers("/users/**").hasAnyRole("ADMINISTRATEUR", "COORDINATEUR")
+                                
+                                // ✅ CRUD Institution/Département/Classe/Groupe pour ENSEIGNANT, COORDINATEUR, ADMIN
+                                .requestMatchers("/api/institutions/**").hasAnyRole("ENSEIGNANT", "COORDINATEUR", "ADMINISTRATEUR")
+                                .requestMatchers("/api/departements/**").hasAnyRole("ENSEIGNANT", "COORDINATEUR", "ADMINISTRATEUR")
+                                .requestMatchers("/api/classes/**").hasAnyRole("ENSEIGNANT", "COORDINATEUR", "ADMINISTRATEUR")
+                                .requestMatchers("/api/groupes/**").hasAnyRole("ENSEIGNANT", "COORDINATEUR", "ADMINISTRATEUR")
+                                
+                                // ✅ Accès lecture seule pour tous les utilisateurs authentifiés
+                                .requestMatchers("/api/institutions", "/api/departements", "/api/classes", "/api/groupes").authenticated()
+                                
+                                // ✅ Gestion des thèmes pour ENSEIGNANT et COORDINATEUR
+                                .requestMatchers("/api/themes/**").hasAnyRole("ENSEIGNANT", "COORDINATEUR", "ADMINISTRATEUR")
+                                .requestMatchers("/api/themes").authenticated()
+                                
+                                // ✅ Gestion des tâches pour ENSEIGNANT et COORDINATEUR
+                                .requestMatchers("/api/taches/**").hasAnyRole("ENSEIGNANT", "COORDINATEUR", "ADMINISTRATEUR")
+                                .requestMatchers("/api/taches/all").hasAnyRole("ENSEIGNANT", "COORDINATEUR", "ADMINISTRATEUR")
+                                
+                                // ✅ Gestion des projets
+                                .requestMatchers("/api/projets/**").hasAnyRole("ENSEIGNANT", "COORDINATEUR", "ADMINISTRATEUR")
+                                
+                                // ✅ Messages et discussions
                                 .requestMatchers("/messages/**").authenticated()
                                 .requestMatchers("/groupes/**").authenticated()
-                                .requestMatchers("/users/**").authenticated()
-
+                                
+                                // ✅ Endpoints étudiant pour choix
+                                .requestMatchers("/api/etudiants/choisir-classe/**").hasRole("ETUDIANT")
+                                .requestMatchers("/api/etudiants/choisir-groupe/**").hasRole("ETUDIANT")
+                                .requestMatchers("/api/etudiants/choisir-theme/**").hasRole("ETUDIANT")
+                                .requestMatchers("/api/etudiants/mon-choix").hasRole("ETUDIANT")
+                                
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

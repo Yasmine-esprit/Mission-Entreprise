@@ -38,4 +38,12 @@ public class ClasseService {
     public void supprimerClasse(Long id) {
         classeRepository.deleteById(id);
     }
+
+    public List<Classe> getClassesByDepartement(Long departementId) {
+        return classeRepository.findByDepartement_IdDepartement(departementId);
+    }
+
+    public List<Classe> getClassesByNiveau(Long niveauId) {
+        return classeRepository.findByNiveau_IdNiveau(niveauId);
+    }
 }
