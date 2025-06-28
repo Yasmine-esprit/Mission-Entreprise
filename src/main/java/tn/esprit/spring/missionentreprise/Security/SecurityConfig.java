@@ -21,12 +21,10 @@ import java.util.List;
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-@EnableMethodSecurity(securedEnabled = true )
+@EnableMethodSecurity(securedEnabled = true)
 public class SecurityConfig {
     private final AuthenticationProvider authenticationProvider;
     private final JwtFilter jwtAuthFilter;
-
-
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -41,23 +39,13 @@ public class SecurityConfig {
                     return config;
                 }))
 
-                .csrf(AbstractHttpConfigurer::disable)  // Disable CSRF as you are working with a stateless API
-                .authorizeHttpRequests(req ->
-                        req.requestMatchers("/auth/**", "/register","/ws/**").permitAll()  // Make sure /register is allowed without authentication
-                                .requestMatchers("/messages/**").authenticated()
-                                .requestMatchers("/groupes/**").authenticated()
-                                .requestMatchers("/users/**").authenticated()
-
-                                .anyRequest().authenticated()
-                )
+                .csrf(AbstractHttpConfigurer::disable) // Disable CSRF as you are working with a stateless API
+                .authorizeHttpRequests(req -> req.anyRequest().permitAll())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
-
-
-
 
 }
