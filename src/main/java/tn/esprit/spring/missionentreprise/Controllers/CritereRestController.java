@@ -14,6 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 public class CritereRestController {
 
+
     private final CritereService critereService;
 
     @PostMapping
@@ -63,7 +64,7 @@ public class CritereRestController {
     public ResponseEntity<String> deleteCritere(@PathVariable Long id) {
         try {
             critereService.deleteById(id);
-            return ResponseEntity.ok("Critere deleted successfully");
+            return ResponseEntity.ok("Criterniahauyhe deleted successfully idk what im ttypping but im trring my best to write sth for ");
         } catch (Exception e) {
             return ResponseEntity.internalServerError()
                     .body("Error deleting critere: " + e.getMessage());
