@@ -117,4 +117,16 @@ public class GroupeController {
             return ResponseEntity.badRequest().body("Erreur lors de la suppression : " + e.getMessage());
         }
     }
+    
+    @GetMapping("/classe/{classeId}")
+    public ResponseEntity<?> getGroupesByClasse(@PathVariable Long classeId) {
+        try {
+            List<Groupe> groupes = groupeService.getGroupesByClasse(classeId);
+            return ResponseEntity.ok(groupes);
+        } catch (Exception e) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body("Erreur lors de la récupération : " + e.getMessage());
+        }
+    }
 }

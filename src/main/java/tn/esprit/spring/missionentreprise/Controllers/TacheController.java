@@ -26,6 +26,7 @@ public class TacheController {
             return ResponseEntity.badRequest().body("Erreur lors de la création : " + e.getMessage());
         }
     }
+    
     @GetMapping("/Projets")
     public ResponseEntity<?> getAll() {
         try {
@@ -35,6 +36,27 @@ public class TacheController {
                 return ResponseEntity
                         .status(HttpStatus.OK)
                         .body("Aucun projet n'est trouvé.");
+            }
+
+            return ResponseEntity.ok(taches);
+
+        } catch (Exception e) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body("Une erreur est survenue : " + e.getMessage());
+        }
+    }
+    
+    // ✅ Ajout endpoint /all pour compatibilité frontend
+    @GetMapping("/all")
+    public ResponseEntity<?> getAllTaches() {
+        try {
+            List<Tache> taches = tacheService.getAll();
+
+            if (taches.isEmpty()) {
+                return ResponseEntity
+                        .status(HttpStatus.OK)
+                        .body("Aucune tâche n'est trouvée.");
             }
 
             return ResponseEntity.ok(taches);

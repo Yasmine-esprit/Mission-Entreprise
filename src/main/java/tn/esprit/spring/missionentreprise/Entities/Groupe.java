@@ -33,6 +33,10 @@ public class Groupe {
 
     @OneToOne
     Projet projet;
+    
+    @ManyToOne
+    @JoinColumn(name = "classe_id")
+    Classe classe;
 
     @OneToMany(mappedBy = "groupe")
     List<Etudiant> etudiants;

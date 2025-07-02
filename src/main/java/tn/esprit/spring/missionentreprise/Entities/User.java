@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
 
 
 @Entity
+@Table(name = "users")
 @Getter
 @Setter
 @ToString
@@ -91,7 +92,7 @@ public class User implements UserDetails, Principal {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return this.roles
-                .stream().map(r->new SimpleGrantedAuthority(r.getRoleType().name()))
+                .stream().map(r->new SimpleGrantedAuthority("ROLE_" + r.getRoleType().name()))
                 .collect(Collectors.toList());
     }
 

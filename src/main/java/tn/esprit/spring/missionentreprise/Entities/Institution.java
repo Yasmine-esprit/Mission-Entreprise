@@ -8,7 +8,6 @@ import lombok.experimental.FieldDefaults;
 
 import java.util.List;
 
-
 @Entity
 @Getter
 @Setter
@@ -17,23 +16,15 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-
-public class Classe {
+public class Institution {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long idCLasse;
-    String nomClasse;
-
-    @ManyToOne
-    Niveau niveau;
+    Long idInstitution;
     
-    @ManyToOne
-    @JoinColumn(name = "departement_id")
-    Departement departement;
-
-    @OneToMany(mappedBy = "classe")
-    List<Etudiant> etudiants;
+    String nomInstitution;
+    String adresse;
+    String description;
     
-    @OneToMany(mappedBy = "classe", cascade = CascadeType.ALL)
-    List<Groupe> groupes;
+    @OneToMany(mappedBy = "institution", cascade = CascadeType.ALL)
+    List<Departement> departements;
 }

@@ -217,7 +217,13 @@ public class AuthenticationService {
             User user = (User) authentication.getPrincipal();
 
             // Step 2: Check if 2FA is enabled for the user
-            if (user.isEnabledUser() && user.getRoles().stream().noneMatch(role -> role.getRoleType().toString().equals("ADMINISTRATEUR"))) {
+            // Désactiver le 2FA pour les comptes de test (sans secret) et les administrateurs
+            boolean is2FARequired = user.isEnabledUser() && 
+                                   user.getSecret() != null && 
+                                   !user.getSecret().isEmpty() &&
+                                   user.getRoles().stream().noneMatch(role -> role.getRoleType().toString().equals("ADMINISTRATEUR"));
+            
+            if (is2FARequired) {
                 Map<String, String> responseMessage = new HashMap<>();
                 responseMessage.put("message", "Please enter the 2FA code.");
                 return ResponseEntity.ok(responseMessage);
@@ -256,8 +262,8 @@ public class AuthenticationService {
     public ResponseEntity<?> verify2FALogin( String email, String code) {
         User user = userRepository.findByEmailUser(email).orElseThrow(() -> new RuntimeException("User not found"));
 
-        // Check if 2FA is enabled
-        if (!user.isEnabledUser()) {
+        // Check if 2FA is enabled and user has a valid secret
+        if (!user.isEnabledUser() || user.getSecret() == null || user.getSecret().isEmpty()) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("2FA is not enabled for this user.");
         }
 
