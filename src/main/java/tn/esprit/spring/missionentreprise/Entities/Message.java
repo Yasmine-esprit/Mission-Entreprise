@@ -7,6 +7,10 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
+<<<<<<< HEAD
+=======
+import java.util.Set;
+>>>>>>> ceadf4d (test)
 
 
 @Entity
@@ -25,4 +29,22 @@ public class Message {
     String contenu;
     LocalDate dateEnvoi;
     Boolean lu;
+<<<<<<< HEAD
+=======
+
+    @Lob
+    byte[] audioMessage; // Message vocal sous forme de fichier audio (si présent)
+
+    @Lob
+    byte[] videoMessage; // Message vidéo sous forme de fichier vidéo (si présent)
+
+    @ManyToOne
+    GroupeMsg groupeMsg;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    User userMessage;
+
+    @OneToMany(mappedBy = "message", cascade = CascadeType.ALL)
+    private Set<Reaction> reactions; // Réactions associées à ce message
+>>>>>>> ceadf4d (test)
 }
