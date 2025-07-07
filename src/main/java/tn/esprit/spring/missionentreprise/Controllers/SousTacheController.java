@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
 import tn.esprit.spring.missionentreprise.Entities.SousTache;
 import tn.esprit.spring.missionentreprise.Services.SousTacheService;
 
@@ -19,7 +20,7 @@ public class SousTacheController {
 
     private final SousTacheService soustacheService;
 
-    @PostMapping("/add")
+    @PostMapping("/addSousTache")
     public ResponseEntity<?> add(@RequestBody SousTache sousTache) {
         try {
             SousTache savedSousTache = soustacheService.add(sousTache);
@@ -44,7 +45,7 @@ public class SousTacheController {
         }
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/getSousTache/{id}")
     public ResponseEntity<?> getSousTacheById(@PathVariable Long id) {
         try {
             SousTache sousTache = soustacheService.getById(id);
@@ -59,7 +60,7 @@ public class SousTacheController {
         }
     }
 
-    @PutMapping("/edit/{id}")
+    @PutMapping("/editSousTache/{id}")
     public ResponseEntity<?> edit(@PathVariable Long id, @RequestBody SousTache updatedSousTache) {
         try {
             SousTache existing = soustacheService.getById(id);
@@ -76,7 +77,7 @@ public class SousTacheController {
         }
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/deleteSousTache/{id}")
     public ResponseEntity<?> deleteById(@PathVariable Long id) {
         try {
             SousTache existing = soustacheService.getById(id);

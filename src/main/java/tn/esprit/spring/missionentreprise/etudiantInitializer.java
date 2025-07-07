@@ -20,7 +20,7 @@ import java.util.List;
 
 @Configuration
 @RequiredArgsConstructor
-public class AdminInitializer implements CommandLineRunner {
+public class etudiantInitializer implements CommandLineRunner {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
@@ -29,35 +29,35 @@ public class AdminInitializer implements CommandLineRunner {
 
     public void run(String... args) throws Exception {
 
-        if (userRepository.findByEmailUser("admin@example.com").isPresent()) {
+        if (userRepository.findByEmailUser("yassmin.tlemsani@esprit.tn").isPresent()) {
             return; // Admin already created
         }
 
         // Check if ADMIN role exists, else create it
-        Role adminRole = roleRepository.findByRoleType(roleName.ADMINISTRATEUR)
+        Role etudiantRole = roleRepository.findByRoleType(roleName.ETUDIANT)
                 .orElseGet(() -> {
                     Role newRole = new Role();
-                    newRole.setRoleType(roleName.ADMINISTRATEUR);
+                    newRole.setRoleType(roleName.ETUDIANT);
                     return roleRepository.save(newRole);
                 });
 
         // Create and save admin user
-        User admin = User.builder()
-                .nomUser("Admin")
-                .prenomUser("User")
-                .emailUser("admin@example.com")
-                .passwordUser(passwordEncoder.encode("admin123"))
-                .enabledUser(true) // no 2FA required
+        User etudiant = User.builder()
+                .nomUser("Yassmin")
+                .prenomUser("Tlemsani")
+                .emailUser("yassmin.tlemsani@esprit.tn")
+                .passwordUser(passwordEncoder.encode("yassmin123"))
+                .enabledUser(false)
                 .accountLockedUser(false)
-                .roles(List.of(adminRole))
+                .roles(List.of(etudiantRole))
                 .createdDate(LocalDateTime.now())
                 .build();
 
-        userRepository.save(admin);
-        System.out.println("Admin user created: admin@example.com / admin123");
+        userRepository.save(etudiant);
+        System.out.println("Etudiant user created: yassmin.tlemsani@esprit.tn / yassmin123");
     }
 
-        
+
 
 }
 

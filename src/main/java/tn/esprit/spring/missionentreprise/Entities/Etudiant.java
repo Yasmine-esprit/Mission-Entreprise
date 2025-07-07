@@ -38,4 +38,6 @@ public class Etudiant extends User{
 
     @OneToMany(mappedBy = "etudiant")
     List <NoteTIndiv> noteTIndiv;
+
+
 }
