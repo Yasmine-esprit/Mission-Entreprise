@@ -33,7 +33,6 @@ public class Etudiant extends User {
     @OneToMany(mappedBy = "etudiant")
     List<Tache> taches;
 
-    /* Évaluations */
     @OneToMany(mappedBy = "etudiant")
     List<IndivEval> noteIndiv;
 
