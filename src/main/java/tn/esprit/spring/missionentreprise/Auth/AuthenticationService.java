@@ -110,6 +110,8 @@ public class AuthenticationService {
         // Create the QR code URL for the user to scan with Google Authenticator
         String qrCodeUrl = twoFactorAuthenticationService.generateQRCode(user.getEmailUser(), secret);
 
+
+
         // Save the 2FA secret in the database
         user.setSecret(secret);
         // Save the user
@@ -177,15 +179,17 @@ public class AuthenticationService {
                 userRepository.save(coordinateur);
             }
 
+
+            // Envoi du mail avec le lien
+            emailService.sendTwoFactorSetupEmail(user.getEmailUser(), user.getFullName(), qrCodeUrl);
         } catch (Exception e) {
             return new ResponseEntity<>("An error occurred while saving the user: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-//        // Send email validation
-//        sendValidationEmail(user);
+//
+//
 
         // If everything is successful, return 200 OK
-        return new ResponseEntity<>("User registered successfully. Please scan the QR code with your authenticator app: " +
-                qrCodeUrl , HttpStatus.CREATED);
+        return new ResponseEntity<>("User registered successfully. Please scan the QR code with your authenticator app: " ,HttpStatus.CREATED);
     }
 
 
@@ -217,7 +221,9 @@ public class AuthenticationService {
             User user = (User) authentication.getPrincipal();
 
             // Step 2: Check if 2FA is enabled for the user
-            if (user.isEnabledUser() && user.getRoles().stream().noneMatch(role -> role.getRoleType().toString().equals("ADMINISTRATEUR"))) {
+            if (user.isEnabledUser() &&
+                    user.getRoles().stream()
+                            .noneMatch(role -> role.getRoleType().toString().equals("ADMINISTRATEUR"))) {
                 Map<String, String> responseMessage = new HashMap<>();
                 responseMessage.put("message", "Please enter the 2FA code.");
                 return ResponseEntity.ok(responseMessage);

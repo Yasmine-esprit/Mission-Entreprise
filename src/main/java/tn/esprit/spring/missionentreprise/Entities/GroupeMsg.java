@@ -37,7 +37,7 @@ public class GroupeMsg {
     private Set<User> users = new HashSet<>();
 
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy="groupeMsg", fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy="groupeMsg", fetch = FetchType.LAZY ,  orphanRemoval = true)
     private Set<Message> messages;
 
 

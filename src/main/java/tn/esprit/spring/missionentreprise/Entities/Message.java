@@ -34,10 +34,13 @@ public class Message {
     byte[] videoMessage; // Message vidéo sous forme de fichier vidéo (si présent)
 
     @ManyToOne
+    @JoinColumn(name = "groupe_msg_id")
     GroupeMsg groupeMsg;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
+    @JoinColumn(name = "user_message_id_user")
     User userMessage;
+
 
     @OneToMany(mappedBy = "message", cascade = CascadeType.ALL)
     private Set<Reaction> reactions; // Réactions associées à ce message

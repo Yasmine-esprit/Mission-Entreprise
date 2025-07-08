@@ -137,7 +137,7 @@ public class MessageService implements IServiceGenerique<Message> {
     @Transactional
     public Message saveMessage(Long groupeId, Message message) {
         // 1) fetch and set the GroupeMsg
-        GroupeMsg groupe = groupeMsgRepository.findById(groupeId.intValue())
+        GroupeMsg groupe = groupeMsgRepository.findById(groupeId)
                 .orElseThrow(() -> new EntityNotFoundException("Group not found " + groupeId));
         message.setGroupeMsg(groupe);
 
@@ -157,7 +157,8 @@ public class MessageService implements IServiceGenerique<Message> {
     @Transactional
     public Message saveMessageWithPayloadUser(Long groupeId, Message message) {
         // 1) fetch group
-        GroupeMsg groupe = groupeMsgRepository.findById(groupeId.intValue())
+        GroupeMsg groupe = groupeMsgRepository.findById(groupeId
+                )
                 .orElseThrow(() -> new EntityNotFoundException("Group not found " + groupeId));
         message.setGroupeMsg(groupe);
 

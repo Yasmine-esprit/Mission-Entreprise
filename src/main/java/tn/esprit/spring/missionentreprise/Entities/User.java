@@ -2,6 +2,7 @@ package tn.esprit.spring.missionentreprise.Entities;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,6 +17,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import tn.esprit.spring.missionentreprise.Utils.Token;
 
 
 import java.security.Principal;
@@ -41,12 +43,12 @@ import java.util.stream.Collectors;
         generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "idUser")
 public class User implements UserDetails, Principal {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long idUser ;
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        Long idUser ;
 
-    String nomUser ;
-    String prenomUser ;
+        String nomUser ;
+        String prenomUser ;
     @Column(unique=true)
     String emailUser ;
 
@@ -73,6 +75,7 @@ public class User implements UserDetails, Principal {
 
      String secret;
     @OneToMany(mappedBy = "user")
+
     List <Post> posts;
 
     @OneToMany(mappedBy = "user")
@@ -86,9 +89,14 @@ public class User implements UserDetails, Principal {
     )
     private Set<GroupeMsg> groups = new HashSet<>();
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Token> tokens;
+
+
 
 
     @Override
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return this.roles
                 .stream().map(r->new SimpleGrantedAuthority(r.getRoleType().name()))
