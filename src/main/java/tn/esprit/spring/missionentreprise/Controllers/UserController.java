@@ -9,11 +9,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import tn.esprit.spring.missionentreprise.Entities.User;
+import tn.esprit.spring.missionentreprise.Repositories.UserRepository;
 import tn.esprit.spring.missionentreprise.Services.UserService;
 import tn.esprit.spring.missionentreprise.Utils.UserDTO;
-
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/users/")
@@ -21,6 +22,7 @@ import java.util.Optional;
 public class UserController {
 
     private final UserService userService;
+    private UserRepository userRepository;
 
     @GetMapping("list")
     public ResponseEntity<?> getUsers() {
@@ -56,6 +58,15 @@ public class UserController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+    }
+
+    //list/etudiant ajoutée par YassminT
+    @GetMapping("list/etudiants")
+    public List<UserDTO> getAllEtudiants() {
+        List<User> users = userService.getAllEtudiants();
+        return users.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
     }
     @GetMapping("{userId}")
     public ResponseEntity<?> getUser(@PathVariable Long userId){
@@ -108,4 +119,34 @@ public class UserController {
           return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
       }
     }
+
+    //ajouté par YassminT
+
+
+
+    @GetMapping("/EtudiantByName")
+    public List<UserDTO> searchEtudiantsByName(@RequestParam String searchTerm) {
+        String searchLower = searchTerm.toLowerCase();
+        List<User> users = userService.searchEtudiantsByName(searchLower);
+
+        return users.stream()
+                .filter(user -> user.getRoles().contains("ETUDIANT"))
+                .filter(user -> user.isEnabledUser())
+                .filter(user -> !user.isAccountLockedUser())
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+    private UserDTO convertToDTO(User user) {
+        return UserDTO.builder()
+                .idUser(user.getIdUser())
+                .nomUser(user.getNomUser())
+                .prenomUser(user.getPrenomUser())
+                .emailUser(user.getEmailUser())
+                .enabledUser(user.isEnabledUser())
+                .accountLockedUser(user.isAccountLockedUser())
+                .roles(user.getRoles().stream().map(Object::toString).collect(Collectors.toList()))
+                .photoProfil(user.getPhotoProfil())
+                .build();
+    }
+
 }
