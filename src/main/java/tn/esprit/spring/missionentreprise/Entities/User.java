@@ -1,26 +1,11 @@
 package tn.esprit.spring.missionentreprise.Entities;
+import java.util.stream.Collectors;//ajouter eya
 
-<<<<<<< HEAD
-=======
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
->>>>>>> ceadf4d (test)
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
-<<<<<<< HEAD
-
-
-import java.util.List;
-
-
-@Entity
-=======
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -28,81 +13,58 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-
 import java.security.Principal;
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
+import java.util.*;
 
 @Entity
 @Table(name = "users")
->>>>>>> ceadf4d (test)
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-@Inheritance(strategy = InheritanceType.JOINED)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-<<<<<<< HEAD
-
-
-public class User {
-=======
+@Inheritance(strategy = InheritanceType.JOINED)
 @EntityListeners(AuditingEntityListener.class)
-@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "idUser")
 public class User implements UserDetails, Principal {
->>>>>>> ceadf4d (test)
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long idUser ;
+    Long idUser;
 
-    String nomUser ;
-    String prenomUser ;
-<<<<<<< HEAD
-    //Byte [] photoProfil;   //it generated an error, maybe consider changing the type of the attribute
+    String nomUser;
+    String prenomUser;
 
-=======
-    @Column(unique=true)
-    String emailUser ;
+    @Column(unique = true)
+    String emailUser;
 
-    String passwordUser ;
+    String passwordUser;
 
-    boolean enabledUser ;
-
-    boolean accountLockedUser ;
+    boolean enabledUser;
+    boolean accountLockedUser;
 
     @CreatedDate
-    @Column(nullable = false , updatable = false )
-    LocalDateTime createdDate ;
+    @Column(nullable = false, updatable = false)
+    LocalDateTime createdDate;
+
     @LastModifiedDate
     @Column(insertable = false)
-    LocalDateTime lastmodifiedDate ;
+    LocalDateTime lastmodifiedDate;
 
     @Lob
     byte[] photoProfil;
 
-
-    @ManyToMany(fetch = FetchType.EAGER)// Roles are stored in the database in a many-to-many relationship
-
+    @ManyToMany(fetch = FetchType.EAGER)
     Collection<Role> roles;
 
-     String secret;
->>>>>>> ceadf4d (test)
-    @OneToMany(mappedBy = "user")
-    List <Post> posts;
+    String secret;
 
     @OneToMany(mappedBy = "user")
-    List <Interaction> interactions;
-<<<<<<< HEAD
-=======
+    List<Post> posts;
+
+    @OneToMany(mappedBy = "user")
+    List<Interaction> interactions;
 
     @ManyToMany
     @JoinTable(
@@ -110,14 +72,12 @@ public class User implements UserDetails, Principal {
             joinColumns = @JoinColumn(name = "users_id_user"),
             inverseJoinColumns = @JoinColumn(name = "groups_id_grp_msg")
     )
-    private Set<GroupeMsg> groups = new HashSet<>();
-
-
+    Set<GroupeMsg> groups = new HashSet<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.roles
-                .stream().map(r->new SimpleGrantedAuthority("ROLE_" + r.getRoleType().name()))
+        return roles.stream()
+                .map(r -> new SimpleGrantedAuthority("ROLE_" + r.getRoleType().name()))
                 .collect(Collectors.toList());
     }
 
@@ -156,8 +116,7 @@ public class User implements UserDetails, Principal {
         return emailUser;
     }
 
-    public String getFullName(){
-       return this.nomUser + ' ' + this.prenomUser;
+    public String getFullName() {
+        return nomUser + " " + prenomUser;
     }
->>>>>>> ceadf4d (test)
 }

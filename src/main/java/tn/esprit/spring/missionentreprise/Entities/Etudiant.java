@@ -25,23 +25,21 @@ public class Etudiant extends User{
     String niveau; // Ex: L3, M1, M2
     String specialite; // Info, GTR, etc.
     LocalDate dateNaissance;
-<<<<<<< HEAD
-=======
+
     Boolean choixEffectue = false;
->>>>>>> ceadf4d (test)
+
 
     @ManyToOne
     Classe classe;
 
     @ManyToOne
     Groupe groupe;
-<<<<<<< HEAD
-=======
+
     
     @ManyToOne
     @JoinColumn(name = "theme_choisi_id")
     Theme themeChoisi;
->>>>>>> ceadf4d (test)
+
 
     @OneToMany(mappedBy = "etudiant")
     List<Tache> taches;

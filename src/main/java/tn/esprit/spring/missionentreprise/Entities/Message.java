@@ -7,11 +7,8 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
-<<<<<<< HEAD
-=======
-import java.util.Set;
->>>>>>> ceadf4d (test)
 
+import java.util.Set;
 
 @Entity
 @Getter
@@ -29,8 +26,7 @@ public class Message {
     String contenu;
     LocalDate dateEnvoi;
     Boolean lu;
-<<<<<<< HEAD
-=======
+
 
     @Lob
     byte[] audioMessage; // Message vocal sous forme de fichier audio (si présent)
@@ -46,5 +42,5 @@ public class Message {
 
     @OneToMany(mappedBy = "message", cascade = CascadeType.ALL)
     private Set<Reaction> reactions; // Réactions associées à ce message
->>>>>>> ceadf4d (test)
+
 }

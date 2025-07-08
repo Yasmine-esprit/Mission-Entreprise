@@ -1,68 +1,32 @@
-<<<<<<< HEAD
-//Module Gestion Organisation
-
 package tn.esprit.spring.missionentreprise.Entities;
 
-=======
-package tn.esprit.spring.missionentreprise.Entities;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
->>>>>>> ceadf4d (test)
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.util.List;
-
-<<<<<<< HEAD
-
 @Entity
+@Table(name = "classe")
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-
 public class Classe {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long idCLasse;
-    String nomClasse;
-
-    @ManyToOne
-    Niveau niveau;
-
-    @OneToMany(mappedBy = "classe")
-    List<Etudiant> etudiants;
-=======
-@Entity
-@Getter @Setter @ToString(exclude = {"niveau","departement","etudiants","groupes"})
-@NoArgsConstructor @AllArgsConstructor @Builder
-@FieldDefaults(level = AccessLevel.PRIVATE)
-public class Classe {
-
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long idCLasse;
+    Long idClasse;
 
     String nomClasse;
 
-    /* ——— relations coupées ——— */
-    @JsonIgnore
     @ManyToOne
-    Niveau niveau;
-
-    @JsonIgnore
-    @ManyToOne @JoinColumn(name = "departement_id")
+    @JoinColumn(name = "departement_id") // facultatif mais recommandé
     Departement departement;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "classe")
-    List<Etudiant> etudiants;
+    @ManyToOne
+    @JoinColumn(name = "niveau_id") // facultatif mais recommandé
+    Niveau niveau;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "classe", cascade = CascadeType.ALL)
-    List<Groupe> groupes;
->>>>>>> ceadf4d (test)
+    // Tu peux ajouter d'autres champs ou relations si besoin (étudiants, groupes, etc.)
 }
