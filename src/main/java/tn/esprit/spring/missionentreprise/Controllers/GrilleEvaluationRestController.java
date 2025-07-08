@@ -5,84 +5,115 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tn.esprit.spring.missionentreprise.Entities.GrilleEvaluation;
+import tn.esprit.spring.missionentreprise.Entities.TypeGrilleEval;
 import tn.esprit.spring.missionentreprise.Services.GrilleEvaluationService;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/grilles-evaluation")
+@RequestMapping("/api/evaluations")
 @AllArgsConstructor
 public class GrilleEvaluationRestController {
 
-    private final GrilleEvaluationService grilleEvaluationService;
+    GrilleEvaluationService grilleEvaluationService;
 
     @PostMapping
-    public ResponseEntity<?> createGrille(@RequestBody GrilleEvaluation grille) {
+    public ResponseEntity<GrilleEvaluation> createGrille(@RequestBody GrilleEvaluation grille) {
         try {
             GrilleEvaluation savedGrille = grilleEvaluationService.add(grille);
-            return ResponseEntity.status(HttpStatus.CREATED)
-                    .body("Grille evaluation created successfully with ID: " + savedGrille.getIdEvaluation());
+            return new ResponseEntity<>(savedGrille, HttpStatus.CREATED);
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError()
-                    .body("Error creating grille evaluation: " + e.getMessage());
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/batch")
+    public ResponseEntity<List<GrilleEvaluation>> createAllGrilles(@RequestBody List<GrilleEvaluation> grilles) {
+        try {
+            List<GrilleEvaluation> savedGrilles = grilleEvaluationService.addAll(grilles);
+            return new ResponseEntity<>(savedGrilles, HttpStatus.CREATED);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getGrilleById(@PathVariable Long id) {
+    public ResponseEntity<GrilleEvaluation> getGrilleById(@PathVariable Long id) {
         GrilleEvaluation grille = grilleEvaluationService.getById(id);
-        if (grille.getIdEvaluation() == 0L) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("Grille evaluation not found with ID: " + id);
-        }
-        return ResponseEntity.ok(grille);
+        return grille.getIdEvaluation() == 0L ?
+                new ResponseEntity<>(HttpStatus.NOT_FOUND) :
+                new ResponseEntity<>(grille, HttpStatus.OK);
     }
 
     @GetMapping
     public ResponseEntity<List<GrilleEvaluation>> getAllGrilles() {
-        return ResponseEntity.ok(grilleEvaluationService.getAll());
+        List<GrilleEvaluation> grilles = grilleEvaluationService.getAll();
+        return new ResponseEntity<>(grilles, HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateGrille(@PathVariable Long id, @RequestBody GrilleEvaluation grille) {
+    public ResponseEntity<GrilleEvaluation> updateGrille(@PathVariable Long id, @RequestBody GrilleEvaluation grille) {
         try {
             grille.setIdEvaluation(id);
-            GrilleEvaluation updated = grilleEvaluationService.edit(grille);
-            return ResponseEntity.ok("Grille evaluation updated successfully");
+            GrilleEvaluation updatedGrille = grilleEvaluationService.edit(grille);
+            return new ResponseEntity<>(updatedGrille, HttpStatus.OK);
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError()
-                    .body("Error updating grille evaluation: " + e.getMessage());
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping("/batch")
+    public ResponseEntity<List<GrilleEvaluation>> updateAllGrilles(@RequestBody List<GrilleEvaluation> grilles) {
+        try {
+            List<GrilleEvaluation> updatedGrilles = grilleEvaluationService.editAll(grilles);
+            return new ResponseEntity<>(updatedGrilles, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteGrille(@PathVariable Long id) {
-        try {
-            grilleEvaluationService.deleteById(id);
-            return ResponseEntity.ok("Grille evaluation deleted successfully");
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError()
-                    .body("Error deleting grille evaluation: " + e.getMessage());
-        }
+    public ResponseEntity<Void> deleteGrille(@PathVariable Long id) {
+        grilleEvaluationService.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    // Additional endpoint to get criteres by grille
+    @DeleteMapping
+    public ResponseEntity<Void> deleteGrille(@RequestBody GrilleEvaluation grille) {
+        grilleEvaluationService.delete(grille);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @DeleteMapping("/all")
+    public ResponseEntity<Void> deleteAllGrilles() {
+        grilleEvaluationService.deleteAll();
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/exists/{id}")
+    public ResponseEntity<Boolean> grilleExists(@PathVariable Long id) {
+        return new ResponseEntity<>(grilleEvaluationService.existsById(id), HttpStatus.OK);
+    }
+
+    @GetMapping("/count")
+    public ResponseEntity<Long> countGrilles() {
+        return new ResponseEntity<>(grilleEvaluationService.count(), HttpStatus.OK);
+    }
+
+
+
+    @GetMapping("/by-type/{type}")
+    public ResponseEntity<List<GrilleEvaluation>> getByType(@PathVariable TypeGrilleEval type) {
+        List<GrilleEvaluation> grilles = grilleEvaluationService.findByTypeEval(type);
+        return new ResponseEntity<>(grilles, HttpStatus.OK);
+    }
+
     @GetMapping("/{id}/criteres")
     public ResponseEntity<?> getCriteresByGrille(@PathVariable Long id) {
-        try {
-            GrilleEvaluation grille = grilleEvaluationService.getById(id);
-            if (grille.getIdEvaluation() == 0L) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body("Grille evaluation not found with ID: " + id);
-            }
-            return ResponseEntity.ok(grille.getCriteres());
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError()
-                    .body("Error fetching criteres: " + e.getMessage());
+        GrilleEvaluation grille = grilleEvaluationService.getById(id);
+        if (grille.getIdEvaluation() == 0L) {
+            return new ResponseEntity<>("Grille not found", HttpStatus.NOT_FOUND);
         }
+        return new ResponseEntity<>(grille.getCriteres(), HttpStatus.OK);
     }
 }

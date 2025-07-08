@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -24,12 +23,10 @@ public class Groupe {
     @Column(name = "nom_groupe", nullable = false)
     String nomGroupe;
 
-    //@Temporal(TemporalType.DATE)
-    //Date dateCreation;
-
     @Enumerated(EnumType.STRING)
-    private Visibilite visibilite;
+    Visibilite visibilite;
 
+    /* Relations */
     @OneToOne
     @JoinColumn(name = "projet_id")
     Projet projet;
@@ -37,8 +34,11 @@ public class Groupe {
     @OneToMany(mappedBy = "groupe", cascade = CascadeType.ALL)
     List<Etudiant> etudiants;
 
+    @ManyToOne
+    GrilleEvaluation grilleEvaluation;
+
     @OneToMany(mappedBy = "groupe", cascade = CascadeType.ALL)
-    List<NoteTGrp> noteTGrps;
+    List<GroupEval> groupEvals;
 
     @OneToOne(mappedBy = "groupe", cascade = CascadeType.ALL)
     Repo repo;

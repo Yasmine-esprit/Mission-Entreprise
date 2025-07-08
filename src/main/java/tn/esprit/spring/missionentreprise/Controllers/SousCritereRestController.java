@@ -17,21 +17,17 @@ public class SousCritereRestController {
     private final SousCritereService sousCritereService;
 
     @PostMapping
-    public ResponseEntity<?> addSousCritere(@RequestBody SousCritere sousCritere) {
+    public ResponseEntity<?> createSousCritere(@RequestBody SousCritere sousCritere) {
         try {
             SousCritere saved = sousCritereService.add(sousCritere);
-            return ResponseEntity.status(HttpStatus.CREATED)
-                    .body("Sub-criteria created successfully with ID: " + saved.getIdSousCritere());
+            return ResponseEntity.status(HttpStatus.CREATED).body(saved);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError()
-                    .body("Error creating sub-criteria: " + e.getMessage());
         }
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getSousCritere(@PathVariable Long id) {
+    public ResponseEntity<?> getSousCritereById(@PathVariable Long id) {
         SousCritere sousCritere = sousCritereService.getById(id);
         if (sousCritere.getIdSousCritere() == 0L) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -50,23 +46,27 @@ public class SousCritereRestController {
         try {
             sousCritere.setIdSousCritere(id);
             SousCritere updated = sousCritereService.edit(sousCritere);
-            return ResponseEntity.ok("Sub-criteria updated successfully");
+            return ResponseEntity.ok(updated);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError()
-                    .body("Error updating sub-criteria: " + e.getMessage());
         }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteSousCritere(@PathVariable Long id) {
-        try {
-            sousCritereService.deleteById(id);
-            return ResponseEntity.ok("Sub-criteria deleted successfully");
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError()
-                    .body("Error deleting sub-criteria: " + e.getMessage());
-        }
+    public ResponseEntity<Void> deleteSousCritere(@PathVariable Long id) {
+        sousCritereService.deleteById(id);
+        return ResponseEntity.ok().build();
     }
+
+    // Additional endpoints
+    @GetMapping("/search")
+    public ResponseEntity<List<SousCritere>> searchByName(@RequestParam String name) {
+        return ResponseEntity.ok(sousCritereService.findByNameContaining(name));
+    }
+
+    @GetMapping("/by-main-criteria/{mainCriteriaId}")
+    public ResponseEntity<List<SousCritere>> getByMainCriteria(@PathVariable Long mainCriteriaId) {
+        return ResponseEntity.ok(sousCritereService.findByMainCriteria(mainCriteriaId));
+    }
+
 }
