@@ -9,9 +9,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import tn.esprit.spring.missionentreprise.Entities.User;
-import tn.esprit.spring.missionentreprise.Repositories.UserRepository;
 import tn.esprit.spring.missionentreprise.Services.UserService;
+import tn.esprit.spring.missionentreprise.Utils.NullPropertyUtils;
 import tn.esprit.spring.missionentreprise.Utils.UserDTO;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -22,7 +23,6 @@ import java.util.stream.Collectors;
 public class UserController {
 
     private final UserService userService;
-    private UserRepository userRepository;
 
     @GetMapping("list")
     public ResponseEntity<?> getUsers() {
@@ -45,28 +45,17 @@ public class UserController {
         }
     }
     @PutMapping("{userId}")
-    public ResponseEntity<?> updateUser(@PathVariable Long userId, @RequestBody User updatedUser){
-        try {
-            User user = userService.getById(userId);
-            if (user == null) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
-            }
-            // Copie tous les champs sauf l'id
-            BeanUtils.copyProperties(updatedUser, user, "idUser");
-            userService.edit(user);
-            return new ResponseEntity<>("User updated successfully", HttpStatus.OK);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+    public ResponseEntity<String> updateUser(@PathVariable Long userId, @RequestBody UserDTO updatedUser) {
+        User user = userService.getById(userId);
+        if (user == null) {
+            return ResponseEntity.notFound().build();
         }
-    }
 
-    //list/etudiant ajoutée par YassminT
-    @GetMapping("list/etudiants")
-    public List<UserDTO> getAllEtudiants() {
-        List<User> users = userService.getAllEtudiants();
-        return users.stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
+        String[] nullProps = NullPropertyUtils.getNullPropertyNames(updatedUser);
+        BeanUtils.copyProperties(updatedUser, user, nullProps);
+
+        userService.edit(user);
+        return ResponseEntity.ok("User updated successfully");
     }
     @GetMapping("{userId}")
     public ResponseEntity<?> getUser(@PathVariable Long userId){
@@ -119,11 +108,6 @@ public class UserController {
           return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
       }
     }
-
-    //ajouté par YassminT
-
-
-
     @GetMapping("/EtudiantByName")
     public List<UserDTO> searchEtudiantsByName(@RequestParam String searchTerm) {
         String searchLower = searchTerm.toLowerCase();
@@ -148,5 +132,4 @@ public class UserController {
                 .photoProfil(user.getPhotoProfil())
                 .build();
     }
-
 }

@@ -16,7 +16,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 >>>>>>> 09d40dcbf742febe9f850db30ba0e4a451c1a52e
 
 @SpringBootApplication
-@EnableJpaAuditing
 public class MissionEntrepriseApplication {
 
     public static void main(String[] args) {

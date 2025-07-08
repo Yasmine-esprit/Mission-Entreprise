@@ -27,10 +27,11 @@ public class JwtFilter extends OncePerRequestFilter {
                                     @NonNull FilterChain filterChain) throws ServletException, IOException {
 
         // Skip filter for whitelisted paths
-        if (request.getServletPath().startsWith("/auth")) {
+        if (request.getServletPath().startsWith("/auth") || request.getServletPath().startsWith("/ws")) {
             filterChain.doFilter(request, response);
             return;
         }
+
 
         // 1. Extract Authorization Header
         final String authHeader = request.getHeader("Authorization");

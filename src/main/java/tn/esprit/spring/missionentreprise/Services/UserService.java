@@ -8,10 +8,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import tn.esprit.spring.missionentreprise.Entities.User;
 import tn.esprit.spring.missionentreprise.Entities.roleName;
 import tn.esprit.spring.missionentreprise.Repositories.UserRepository;
+import tn.esprit.spring.missionentreprise.Utils.TokenRepository;
 import tn.esprit.spring.missionentreprise.Utils.UserDTO;
 
 import java.io.IOException;
@@ -25,6 +27,7 @@ public class UserService implements IServiceGenerique<User> {
 
 
     private final UserRepository userRepository;
+    private final TokenRepository tokenRepository;
 
     @Override
     public User add(User user) {
@@ -62,9 +65,11 @@ public class UserService implements IServiceGenerique<User> {
     public void deleteAll() {
 
     }
-
+    @Transactional
     @Override
     public void deleteById(Long id) {
+        User user = userRepository.findById(id).orElseThrow();
+        tokenRepository.deleteByUser(user);
         userRepository.deleteById(id);
 
     }

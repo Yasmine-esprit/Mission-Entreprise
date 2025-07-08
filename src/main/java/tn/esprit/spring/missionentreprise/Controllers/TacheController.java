@@ -75,26 +75,7 @@ public class TacheController {
         }
     }
     
-    // ✅ Ajout endpoint /all pour compatibilité frontend
-    @GetMapping("/all")
-    public ResponseEntity<?> getAllTaches() {
-        try {
-            List<Tache> taches = tacheService.getAll();
 
-            if (taches.isEmpty()) {
-                return ResponseEntity
-                        .status(HttpStatus.OK)
-                        .body("Aucune tâche n'est trouvée.");
-            }
-
-            return ResponseEntity.ok(taches);
-
-        } catch (Exception e) {
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body("Une erreur est survenue : " + e.getMessage());
-        }
-    }
 
     @GetMapping("/get/{id}")
     public ResponseEntity<Tache> getTacheById(@PathVariable Long id) {
