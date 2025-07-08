@@ -45,6 +45,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())  // Keep CSRF disabled for stateless API
                 .authorizeHttpRequests(req ->
 <<<<<<< HEAD
+<<<<<<< HEAD
                         req.requestMatchers("/auth/**", "/register","/ws/**").permitAll()  // Public endpoints
                                 
                                 // ✅ Accès utilisateur authentifié (nécessaire pour navbar et profil)
@@ -82,6 +83,9 @@ public class SecurityConfig {
                                 .requestMatchers("/api/etudiants/mon-choix").hasRole("ETUDIANT")
                                 
 =======
+=======
+
+>>>>>>> 09d40dcbf742febe9f850db30ba0e4a451c1a52e
                         req.requestMatchers("/auth/**", "/register", "/ws/**"// Keep this public if needed
                                 ).permitAll()
                                 .requestMatchers("/messages/**", "/groupes/**", "/users/**", "/groupe/**"
@@ -90,7 +94,10 @@ public class SecurityConfig {
                                 .requestMatchers("/api/taches/files/upload").authenticated()
                                 .requestMatchers("/api/sousTaches/**").authenticated()
                                 .requestMatchers("/api/groupe/**").hasAnyAuthority("ADMINISTRATEUR", "ENSEIGNANT","COORDINATEUR")
+<<<<<<< HEAD
 >>>>>>> 800784042b3a6f6955d33992fcb8e5a432132e7f
+=======
+>>>>>>> 09d40dcbf742febe9f850db30ba0e4a451c1a52e
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

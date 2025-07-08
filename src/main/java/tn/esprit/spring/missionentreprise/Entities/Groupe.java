@@ -42,12 +42,18 @@ public class Groupe {
     List<Etudiant> etudiants;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     @ManyToOne
     GrilleEvaluation grilleEvaluation;
 =======
     @OneToMany(mappedBy = "groupe", cascade = CascadeType.ALL)
     List<NoteTGrp> noteTGrps;
 >>>>>>> 800784042b3a6f6955d33992fcb8e5a432132e7f
+=======
+    @ManyToOne
+    GrilleEvaluation grilleEvaluation;
+
+>>>>>>> 09d40dcbf742febe9f850db30ba0e4a451c1a52e
 
     @OneToOne(mappedBy = "groupe", cascade = CascadeType.ALL)
     Repo repo;
