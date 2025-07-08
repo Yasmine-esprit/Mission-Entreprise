@@ -30,8 +30,6 @@ public class RoleInitializer implements CommandLineRunner {
                         // Role does not exist, create and save it with proper dates
                         Role newRole = new Role();
                         newRole.setRoleType(roleType);
-                        newRole.setCreatedDate(LocalDateTime.now());  // Set current date for createdDate
-                        newRole.setLastmodifiedDate(LocalDateTime.now());  // Set current date for lastmodifiedDate
                         roleRepository.save(newRole);  // Save to the database
                         System.out.println("Role " + roleType + " created.");
                     }

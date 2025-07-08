@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import tn.esprit.spring.missionentreprise.Entities.User;
 import tn.esprit.spring.missionentreprise.Services.UserService;
+import tn.esprit.spring.missionentreprise.Utils.NullPropertyUtils;
 import tn.esprit.spring.missionentreprise.Utils.UserDTO;
 
 import java.util.List;
@@ -43,20 +44,19 @@ public class UserController {
         }
     }
     @PutMapping("{userId}")
-    public ResponseEntity<?> updateUser(@PathVariable Long userId, @RequestBody User updatedUser){
-        try {
-            User user = userService.getById(userId);
-            if (user == null) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
-            }
-            // Copie tous les champs sauf l'id
-            BeanUtils.copyProperties(updatedUser, user, "idUser");
-            userService.edit(user);
-            return new ResponseEntity<>("User updated successfully", HttpStatus.OK);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+    public ResponseEntity<String> updateUser(@PathVariable Long userId, @RequestBody UserDTO updatedUser) {
+        User user = userService.getById(userId);
+        if (user == null) {
+            return ResponseEntity.notFound().build();
         }
+
+        String[] nullProps = NullPropertyUtils.getNullPropertyNames(updatedUser);
+        BeanUtils.copyProperties(updatedUser, user, nullProps);
+
+        userService.edit(user);
+        return ResponseEntity.ok("User updated successfully");
     }
+
     @GetMapping("{userId}")
     public ResponseEntity<?> getUser(@PathVariable Long userId){
         try {

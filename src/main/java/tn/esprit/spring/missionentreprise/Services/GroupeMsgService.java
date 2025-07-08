@@ -1,5 +1,6 @@
 package tn.esprit.spring.missionentreprise.Services;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -11,16 +12,19 @@ import tn.esprit.spring.missionentreprise.Entities.GroupeMsg;
 import tn.esprit.spring.missionentreprise.Entities.Message;
 import tn.esprit.spring.missionentreprise.Entities.User;
 import tn.esprit.spring.missionentreprise.Repositories.GroupeMsgRepository;
+import tn.esprit.spring.missionentreprise.Repositories.MessageRepository;
 import tn.esprit.spring.missionentreprise.Repositories.UserRepository;
 
 import java.util.*;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class GroupeMsgService implements IServiceGenerique<GroupeMsg> {
 
     private final GroupeMsgRepository groupeMsgRepository;
     private final UserRepository userRepository;
+    private final MessageRepository messageRepository;
 
 
     public ResponseEntity<?> creeGroupeMsg(Set<Long> userIds) {
@@ -133,28 +137,32 @@ public class GroupeMsgService implements IServiceGenerique<GroupeMsg> {
     @Transactional
     @Override
     public void deleteById(Long id) {
-        GroupeMsg groupeMsg = groupeMsgRepository.findByIdGrpMsg(id)
-                .orElseThrow(() -> new RuntimeException("Group not found with ID: " + id));
+        GroupeMsg groupeMsg = groupeMsgRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Group not found"));
+        log.info("you are in delete now");
+        // Charger les messages et utilisateurs
+        groupeMsg.getMessages().size();
+        groupeMsg.getUsers().size();
 
-        // Copier la liste pour éviter ConcurrentModificationException
+        // Supprimer explicitement les messages
+        messageRepository.deleteAll(groupeMsg.getMessages());
+        groupeMsg.getMessages().clear();
+
+        // Rompre la relation User <-> GroupeMsg
         Set<User> users = new HashSet<>(groupeMsg.getUsers());
-        System.out.println("user ids " + users);
-        // Rompre les associations dans les deux sens
         for (User user : users) {
-            System.out.println("user gr " + user.getGroups());
-            user.getGroups().remove(groupeMsg); // côté User
-
+            user.getGroups().remove(groupeMsg);
         }
+        groupeMsg.getUsers().clear();
 
+        userRepository.saveAll(users);
+        groupeMsgRepository.save(groupeMsg);
 
-        groupeMsg.getUsers().clear(); // côté GroupeMsg
-
-        userRepository.saveAll(users);           // Sauvegarde utilisateurs modifiés
-        groupeMsgRepository.save(groupeMsg);     // Sauvegarde groupe sans utilisateurs
-
-        // Maintenant que plus aucune relation n'existe, on peut le supprimer
+        // Supprimer le groupe
         groupeMsgRepository.delete(groupeMsg);
     }
+
+
 
 
 
