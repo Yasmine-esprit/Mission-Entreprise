@@ -42,8 +42,14 @@ public class Etudiant extends User{
 
 
     @OneToMany(mappedBy = "etudiant")
+<<<<<<< HEAD
     List <IndivEval> noteIndiv;
 
     @OneToMany(mappedBy = "etudiant")
     List <GroupEval> groupEvals;
+=======
+    List <NoteTIndiv> noteTIndiv;
+
+
+>>>>>>> 800784042b3a6f6955d33992fcb8e5a432132e7f
 }

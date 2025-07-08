@@ -2,9 +2,9 @@ package tn.esprit.spring.missionentreprise.Entities;
 
 public enum Statut {
     ToDo,
-    EnCours,
-    Terminé,
+    INPROGRESS,
+    DONE,
     Test,
-    Validé,
-    Annulé
+    VALIDATED,
+    CANCELED
 }

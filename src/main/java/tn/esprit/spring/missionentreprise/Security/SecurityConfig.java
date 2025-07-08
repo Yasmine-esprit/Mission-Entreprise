@@ -3,6 +3,7 @@ package tn.esprit.spring.missionentreprise.Security;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.Customizer;
@@ -34,15 +35,16 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(request -> {
                     CorsConfiguration config = new CorsConfiguration();
                     config.setAllowedOrigins(List.of("http://localhost:4200")); // ✅ Pas '*'
-                    config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+                    config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE","PATCH", "OPTIONS"));
                     config.setAllowedHeaders(List.of("*"));
                     config.setAllowCredentials(true); // ✅ Obligatoire si tu as un JWT ou cookie
                     config.addExposedHeader("Authorization"); // si tu veux que le header soit visible
                     return config;
                 }))
 
-                .csrf(AbstractHttpConfigurer::disable)  // Disable CSRF as you are working with a stateless API
+                .csrf(csrf -> csrf.disable())  // Keep CSRF disabled for stateless API
                 .authorizeHttpRequests(req ->
+<<<<<<< HEAD
                         req.requestMatchers("/auth/**", "/register","/ws/**").permitAll()  // Public endpoints
                                 
                                 // ✅ Accès utilisateur authentifié (nécessaire pour navbar et profil)
@@ -79,6 +81,16 @@ public class SecurityConfig {
                                 .requestMatchers("/api/etudiants/choisir-theme/**").hasRole("ETUDIANT")
                                 .requestMatchers("/api/etudiants/mon-choix").hasRole("ETUDIANT")
                                 
+=======
+                        req.requestMatchers("/auth/**", "/register", "/ws/**"// Keep this public if needed
+                                ).permitAll()
+                                .requestMatchers("/messages/**", "/groupes/**", "/users/**", "/groupe/**"
+                                ).authenticated()
+                                .requestMatchers("/api/taches/**").authenticated()
+                                .requestMatchers("/api/taches/files/upload").authenticated()
+                                .requestMatchers("/api/sousTaches/**").authenticated()
+                                .requestMatchers("/api/groupe/**").hasAnyAuthority("ADMINISTRATEUR", "ENSEIGNANT","COORDINATEUR")
+>>>>>>> 800784042b3a6f6955d33992fcb8e5a432132e7f
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
