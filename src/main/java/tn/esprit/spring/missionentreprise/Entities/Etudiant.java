@@ -1,5 +1,4 @@
-//Module Gestion User
-
+// Module Gestion User
 package tn.esprit.spring.missionentreprise.Entities;
 
 import jakarta.persistence.*;
@@ -10,7 +9,6 @@ import lombok.experimental.SuperBuilder;
 import java.time.LocalDate;
 import java.util.List;
 
-
 @Entity
 @Getter
 @Setter
@@ -19,11 +17,11 @@ import java.util.List;
 @AllArgsConstructor
 @SuperBuilder
 @FieldDefaults(level = AccessLevel.PRIVATE)
+public class Etudiant extends User {
 
-public class Etudiant extends User{
     String matricule;
-    String niveau; // Ex: L3, M1, M2
-    String specialite; // Info, GTR, etc.
+    String niveau;        // Ex : L3, M1, M2
+    String specialite;    // Info, GTR, etc.
     LocalDate dateNaissance;
 
     @ManyToOne
@@ -35,7 +33,10 @@ public class Etudiant extends User{
     @OneToMany(mappedBy = "etudiant")
     List<Tache> taches;
 
+    /* Évaluations */
+    @OneToMany(mappedBy = "etudiant")
+    List<IndivEval> noteIndiv;
 
     @OneToMany(mappedBy = "etudiant")
-    List <NoteTIndiv> noteTIndiv;
+    List<GroupEval> groupEvals;
 }
