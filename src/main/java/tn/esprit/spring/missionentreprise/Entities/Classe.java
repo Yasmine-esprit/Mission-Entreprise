@@ -1,32 +1,42 @@
+//Module Gestion Organisation
+
 package tn.esprit.spring.missionentreprise.Entities;
 
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.List;
+
+
 @Entity
-@Table(name = "classe")
 @Getter
 @Setter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Classe {
 
+public class Classe {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long idClasse;
-
+    Long idCLasse;
     String nomClasse;
 
     @ManyToOne
-    @JoinColumn(name = "departement_id") // facultatif mais recommandé
+    Niveau niveau;
+    
+    @ManyToOne
+    @JoinColumn(name = "departement_id")
     Departement departement;
 
-    @ManyToOne
-    @JoinColumn(name = "niveau_id") // facultatif mais recommandé
-    Niveau niveau;
+    @OneToMany(mappedBy = "classe")
+    List<Etudiant> etudiants;
+    
+    @OneToMany(mappedBy = "classe", cascade = CascadeType.ALL)
+    List<Groupe> groupes;
 
-    // Tu peux ajouter d'autres champs ou relations si besoin (étudiants, groupes, etc.)
+    @ManyToOne
+    GrilleEvaluation grilleEvaluation;
 }

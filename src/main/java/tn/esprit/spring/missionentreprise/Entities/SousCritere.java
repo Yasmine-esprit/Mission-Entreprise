@@ -24,12 +24,19 @@ public class SousCritere {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long idSousCritere;
     @Column(nullable = false)
-    String descriptionSousCritere;
+    String nameSousCritere;
+    @Column(nullable = false)
+    Long maxPoints;
+    @Enumerated(EnumType.STRING)
+    GradingLevels gradingLevels;
+    @Enumerated(EnumType.ORDINAL)
+    PoinRangesSubCrit poinRangesSubCrit;
+    @Enumerated(EnumType.STRING)
+    DescSubCriteria descSubCriteria;
     Long noteMax;
-    Long noteMin;
 
     @ManyToOne
-    Critere critere;
+    MainCriteria mainCritere;
 
 
 

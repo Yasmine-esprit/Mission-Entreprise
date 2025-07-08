@@ -1,9 +1,8 @@
 package tn.esprit.spring.missionentreprise.Entities;
 
-
-
 public enum Visibilite {
-    PUBLIC,
+
     PRIVE,
+    PUBLIC,
     PAR_INVITATION
 }

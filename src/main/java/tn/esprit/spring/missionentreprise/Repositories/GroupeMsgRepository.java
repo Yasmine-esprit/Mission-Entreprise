@@ -7,7 +7,7 @@ import tn.esprit.spring.missionentreprise.Entities.User;
 import java.util.List;
 import java.util.Optional;
 
-public interface GroupeMsgRepository extends JpaRepository<GroupeMsg, Integer> {
+public interface GroupeMsgRepository extends JpaRepository<GroupeMsg, Long> {
 
     List<GroupeMsg> findByUsersContaining(User user);
 

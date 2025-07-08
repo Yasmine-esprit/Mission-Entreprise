@@ -25,7 +25,7 @@ public class Theme {
     @ManyToOne
     @JoinColumn(name = "module_id")
     Module module;
-
+    
     @ManyToOne
     @JoinColumn(name = "classe_id")
     Classe classe;
@@ -33,4 +33,6 @@ public class Theme {
     @ManyToOne
     @JoinColumn(name = "groupe_id")
     Groupe groupe;
+
+
 }

@@ -16,46 +16,42 @@ import java.util.List;
 public class InstitutionController {
 
     @Autowired
-    private InstitutionService institutionService;
+    InstitutionService institutionService;
 
     @PostMapping
-    @PreAuthorize("hasAnyRole('ADMINISTRATEUR','ENSEIGNANT','COORDINATEUR')")
+    @PreAuthorize("hasRole('ENSEIGNANT') or hasRole('COORDINATEUR')")
     public Institution ajouterInstitution(@RequestBody Institution institution) {
         return institutionService.ajouterInstitution(institution);
     }
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('ADMINISTRATEUR','ENSEIGNANT','COORDINATEUR')")
     public List<Institution> getAllInstitutions() {
         return institutionService.getAllInstitutions();
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMINISTRATEUR','ENSEIGNANT','COORDINATEUR')")
     public Institution getInstitutionById(@PathVariable Long id) {
         return institutionService.getInstitutionById(id);
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMINISTRATEUR','ENSEIGNANT','COORDINATEUR')")
+    @PreAuthorize("hasRole('ENSEIGNANT') or hasRole('COORDINATEUR')")
     public Institution modifierInstitution(@PathVariable Long id, @RequestBody Institution institution) {
         return institutionService.modifierInstitution(id, institution);
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMINISTRATEUR','COORDINATEUR')")
+    @PreAuthorize("hasRole('ENSEIGNANT') or hasRole('COORDINATEUR')")
     public void supprimerInstitution(@PathVariable Long id) {
         institutionService.supprimerInstitution(id);
     }
-
+    
     @GetMapping("/{id}/departements")
-    @PreAuthorize("hasAnyRole('ADMINISTRATEUR','ENSEIGNANT','COORDINATEUR')")
     public List<Departement> getDepartementsByInstitution(@PathVariable Long id) {
         return institutionService.getDepartementsByInstitution(id);
     }
-
+    
     @GetMapping("/hierarchie")
-    @PreAuthorize("hasAnyRole('ADMINISTRATEUR','ENSEIGNANT','COORDINATEUR')")
     public HierarchieDTO getHierarchieComplete() {
         return institutionService.getHierarchieComplete();
     }

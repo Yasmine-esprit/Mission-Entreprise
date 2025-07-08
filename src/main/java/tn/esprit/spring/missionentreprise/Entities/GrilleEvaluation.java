@@ -6,8 +6,10 @@ package tn.esprit.spring.missionentreprise.Entities;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,20 +28,28 @@ public class GrilleEvaluation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long idEvaluation;
+    @Column(nullable = false)
+    String teacher;
     String nomEvaluation;
     LocalDate dateEvaluation;
     @Enumerated(EnumType.STRING)
     TypeGrilleEval typeEval;
 
+
     @OneToOne
     Phase phase;
 
-    @OneToMany(mappedBy = "grilleEvaluation",  cascade = CascadeType.ALL, orphanRemoval = true)
-    List<NoteTIndiv> noteIndiv = new ArrayList<>();
+    @ManyToOne
+    Enseignant enseignant;
 
-    @OneToMany(mappedBy = "grilleEvaluation",  cascade = CascadeType.ALL, orphanRemoval = true)
-    List<NoteTGrp> noteGrp = new ArrayList<>();
+    @OneToMany(mappedBy = "grilleEvaluation")
+    List <Groupe> groupes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "grilleEvaluation")
+    List <Classe> classes = new ArrayList<>();
 
     @OneToMany(mappedBy = "grilleEvaluation")
     List<Critere> criteres;
+
+
 }

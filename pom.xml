@@ -30,7 +30,10 @@
         <java.version>17</java.version>
     </properties>
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> origin/main
     <repositories>
         <repository>
             <id>central</id>
@@ -42,7 +45,10 @@
         </repository>
     </repositories>
 
+<<<<<<< HEAD
 >>>>>>> ceadf4d (test)
+=======
+>>>>>>> origin/main
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -60,6 +66,7 @@
         </dependency>
         <dependency>
 <<<<<<< HEAD
+<<<<<<< HEAD
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
@@ -73,6 +80,14 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
+=======
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+>>>>>>> origin/main
             <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
         <dependency>
@@ -98,7 +113,10 @@
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
+<<<<<<< HEAD
 >>>>>>> ceadf4d (test)
+=======
+>>>>>>> origin/main
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
@@ -109,7 +127,10 @@
             <scope>compile</scope>
         </dependency>
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> origin/main
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
@@ -161,7 +182,10 @@
             <artifactId>spring-boot-starter-websocket</artifactId>
         </dependency>
 
+<<<<<<< HEAD
 >>>>>>> ceadf4d (test)
+=======
+>>>>>>> origin/main
     </dependencies>
 
     <build>
@@ -170,6 +194,7 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
 <<<<<<< HEAD
+<<<<<<< HEAD
                 <configuration>
 =======
                 <version>3.8.1</version>
@@ -177,14 +202,24 @@
                     <source>${java.version}</source>
                     <target>${java.version}</target>
 >>>>>>> ceadf4d (test)
+=======
+                <version>3.8.1</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+>>>>>>> origin/main
                     <annotationProcessorPaths>
                         <path>
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok</artifactId>
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
                             <version>1.18.30</version>
 >>>>>>> ceadf4d (test)
+=======
+                            <version>1.18.30</version>
+>>>>>>> origin/main
                         </path>
                     </annotationProcessorPaths>
                 </configuration>
@@ -192,6 +227,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+<<<<<<< HEAD
 <<<<<<< HEAD
                 <configuration>
                     <excludes>
@@ -203,12 +239,18 @@
                 </configuration>
 =======
 >>>>>>> ceadf4d (test)
+=======
+>>>>>>> origin/main
             </plugin>
         </plugins>
     </build>
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 
 >>>>>>> ceadf4d (test)
+=======
+
+>>>>>>> origin/main
 </project>
