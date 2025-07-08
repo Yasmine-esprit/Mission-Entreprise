@@ -5,8 +5,6 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.springframework.cglib.core.Local;
-
 import java.time.LocalDate;
 import java.util.List;
 
