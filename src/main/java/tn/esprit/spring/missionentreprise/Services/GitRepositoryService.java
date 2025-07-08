@@ -43,10 +43,38 @@ public class GitRepositoryService {
 
     private final String REPO_BASE_PATH = "C:/Users/mahdi/Desktop/git-repos"; // Change this path
 
+    // DTO class for repository information
+    public static class RepositoryInfo {
+        private String name;
+        private String description;
+        private boolean isPrivate;
+
+        public RepositoryInfo(String name, String description, boolean isPrivate) {
+            this.name = name;
+            this.description = description;
+            this.isPrivate = isPrivate;
+        }
+
+        // Getters and setters
+        public String getName() { return name; }
+        public void setName(String name) { this.name = name; }
+        
+        public String getDescription() { return description; }
+        public void setDescription(String description) { this.description = description; }
+        
+        public boolean isPrivate() { return isPrivate; }
+        public void setPrivate(boolean isPrivate) { this.isPrivate = isPrivate; }
+    }
+
     // Create a new repository
-    public String createGitHubRepository(String repoName) throws IOException {
+    public String createGitHubRepository(String repoName, String description, boolean isPrivate) throws IOException {
         String apiUrl = "https://api.github.com/user/repos";
-        String json = "{ \"name\": \"" + repoName + "\", \"private\": false }";
+        String json = String.format(
+            "{ \"name\": \"%s\", \"description\": \"%s\", \"private\": %s }",
+            repoName,
+            description != null ? description : "",
+            isPrivate
+        );
 
         CloseableHttpClient client = HttpClients.createDefault();
         HttpPost post = new HttpPost(apiUrl);
@@ -104,12 +132,78 @@ public class GitRepositoryService {
         return branches;
     }
 
-    public List<String> listLocalRepositories() {
+    public List<RepositoryInfo> listLocalRepositories() {
+        List<RepositoryInfo> repos = new ArrayList<>();
     File baseDir = new File(REPO_BASE_PATH);
-    String[] repos = baseDir.list((current, name) -> new File(current, name).isDirectory());
-    return repos != null ? List.of(repos) : List.of();
+        
+        if (!baseDir.exists() || !baseDir.isDirectory()) {
+            return repos;
+        }
+        
+        String[] repoNames = baseDir.list((current, name) -> new File(current, name).isDirectory());
+        
+        if (repoNames != null) {
+            for (String repoName : repoNames) {
+                try {
+                    // Try to get repository info from GitHub API
+                    RepositoryInfo repoInfo = getRepositoryInfoFromGitHub(repoName);
+                    if (repoInfo != null) {
+                        repos.add(repoInfo);
+                    } else {
+                        // Fallback: create basic info if GitHub API fails
+                        repos.add(new RepositoryInfo(repoName, "Local repository", false));
+                    }
+                } catch (Exception e) {
+                    // Fallback: create basic info if there's an error
+                    repos.add(new RepositoryInfo(repoName, "Local repository", false));
+                }
+            }
+        }
+        
+        return repos;
+    }
+
+    // Helper method to get repository info from GitHub API
+    private RepositoryInfo getRepositoryInfoFromGitHub(String repoName) throws IOException {
+        String apiUrl = "https://api.github.com/repos/" + githubUsername + "/" + repoName;
+        
+        CloseableHttpClient client = HttpClients.createDefault();
+        org.apache.http.client.methods.HttpGet get = new org.apache.http.client.methods.HttpGet(apiUrl);
+        get.setHeader("Authorization", "token " + githubToken);
+        get.setHeader("Accept", "application/vnd.github.v3+json");
+        
+        HttpResponse response = client.execute(get);
+        
+        if (response.getStatusLine().getStatusCode() == 200) {
+            String responseBody = EntityUtils.toString(response.getEntity());
+            // Parse JSON response to extract description and private status
+            // For simplicity, we'll use basic string parsing
+            // In a production environment, you might want to use a JSON parser like Jackson
+            
+            boolean isPrivate = responseBody.contains("\"private\":true");
+            String description = extractDescription(responseBody);
+            
+            return new RepositoryInfo(repoName, description, isPrivate);
 }
 
+        return null;
+    }
+
+    // Helper method to extract description from JSON response
+    private String extractDescription(String jsonResponse) {
+        // Simple JSON parsing for description field
+        int descIndex = jsonResponse.indexOf("\"description\":");
+        if (descIndex != -1) {
+            int startQuote = jsonResponse.indexOf("\"", descIndex + 15);
+            if (startQuote != -1) {
+                int endQuote = jsonResponse.indexOf("\"", startQuote + 1);
+                if (endQuote != -1) {
+                    return jsonResponse.substring(startQuote + 1, endQuote);
+                }
+            }
+        }
+        return "No description available";
+    }
 
     // Compare last 2 commits (diff)
     public List<String> compareLastTwoCommits(String repoName) throws Exception {

@@ -2,6 +2,7 @@
 
 package tn.esprit.spring.missionentreprise.Entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -28,9 +29,11 @@ public class Post {
     LocalDate datePost;
 
     @ManyToOne
-    User user;
+    private User user;
 
     @OneToMany(mappedBy = "post")
-    List<Interaction> interactions;
+    @JsonIgnore
+    private List<Interaction> interactions;
+
 }
 

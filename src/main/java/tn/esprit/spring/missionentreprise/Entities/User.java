@@ -50,6 +50,7 @@ public class User implements UserDetails, Principal {
     @Column(unique=true)
     String emailUser ;
 
+    @JsonIgnore
     String passwordUser ;
 
     boolean enabledUser ;
@@ -71,9 +72,11 @@ public class User implements UserDetails, Principal {
 
     Collection<Role> roles;
 
-     String secret;
+    @JsonIgnore
+    String secret;
     @OneToMany(mappedBy = "user")
-    List <Post> posts;
+    @JsonIgnore
+    private List<Post> posts;
 
     @OneToMany(mappedBy = "user")
     List <Interaction> interactions;
@@ -96,6 +99,7 @@ public class User implements UserDetails, Principal {
     }
 
     @Override
+    @JsonIgnore
     public String getPassword() {
         return passwordUser;
     }

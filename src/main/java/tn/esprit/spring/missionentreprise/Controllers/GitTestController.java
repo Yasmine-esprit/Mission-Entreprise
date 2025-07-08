@@ -9,6 +9,14 @@ import org.springframework.web.bind.annotation.*;
 import tn.esprit.spring.missionentreprise.Services.GitRepositoryService;
 import lombok.Data;
 import java.util.List;
+import tn.esprit.spring.missionentreprise.Repositories.EtudiantRepository;
+import tn.esprit.spring.missionentreprise.Repositories.GroupeRepository;
+import tn.esprit.spring.missionentreprise.Repositories.RepoRepository;
+import tn.esprit.spring.missionentreprise.Entities.Etudiant;
+import tn.esprit.spring.missionentreprise.Entities.Groupe;
+import tn.esprit.spring.missionentreprise.Entities.Repo;
+import org.springframework.security.core.context.SecurityContextHolder;
+import tn.esprit.spring.missionentreprise.Repositories.UserRepository;
 
 @Data
 class CloneBody {
@@ -22,11 +30,36 @@ class CloneBody {
 public class GitTestController {
 
     private final GitRepositoryService gitRepositoryService;
+    private final EtudiantRepository etudiantRepository;
+    private final GroupeRepository groupeRepository;
+    private final RepoRepository repoRepository;
+    private final UserRepository userRepository;
 
     @PostMapping("/create")
     public ResponseEntity<?> createRepo(@RequestBody CreateRepoRequest request) {
         try {
-            String result = gitRepositoryService.createGitHubRepository(request.getRepoName());
+            String result = gitRepositoryService.createGitHubRepository(
+                request.getRepoName(), 
+                request.getDescription(), 
+                request.isPrivate()
+            );
+            // Get current username (email) from SecurityContext
+            String username = SecurityContextHolder.getContext().getAuthentication().getName();
+            // Find User by username (email)
+            tn.esprit.spring.missionentreprise.Entities.User user = userRepository.findByEmailUser(username).orElseThrow(() -> new RuntimeException("User not found"));
+            Long userId = user.getIdUser();
+            // Find Etudiant by id_user
+            Etudiant etudiant = etudiantRepository.findById(userId).orElse(null);
+            if (etudiant == null || etudiant.getGroupe() == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User or group not found");
+            }
+            // Create and save Repo entity
+            Repo repo = Repo.builder()
+                .nomRepo(request.getRepoName())
+                .groupe(etudiant.getGroupe())
+                .sousTache(null)
+                .build();
+            repoRepository.save(repo);
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -75,7 +108,7 @@ public class GitTestController {
     @GetMapping("/local-repos")
     public ResponseEntity<?> getLocalRepositories() {
         try {
-            List<String> repos = gitRepositoryService.listLocalRepositories();
+            List<GitRepositoryService.RepositoryInfo> repos = gitRepositoryService.listLocalRepositories();
             return ResponseEntity.ok(repos);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

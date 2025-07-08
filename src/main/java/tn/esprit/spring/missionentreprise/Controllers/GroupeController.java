@@ -2,15 +2,15 @@
 
 package tn.esprit.spring.missionentreprise.Controllers;
 
-
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tn.esprit.spring.missionentreprise.Entities.Groupe;
+import tn.esprit.spring.missionentreprise.Entities.Visibilite;
 import tn.esprit.spring.missionentreprise.Services.GroupeService;
 
-
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -28,6 +28,7 @@ public class GroupeController {
             return ResponseEntity.badRequest().body("Erreur lors de la création : " + e.getMessage());
         }
     }
+
     @GetMapping("/groupes")
     public ResponseEntity<?> getAll() {
         try {
@@ -82,7 +83,6 @@ public class GroupeController {
         }
     }
 
-
     @DeleteMapping("/Deletegroupes/{id}")
     public ResponseEntity<?> deleteById(@PathVariable Long id) {
         try {
@@ -100,7 +100,6 @@ public class GroupeController {
         }
     }
 
-
     @DeleteMapping("/Deletegroupes")
     public ResponseEntity<?> deleteAll() {
         try {
@@ -116,5 +115,45 @@ public class GroupeController {
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Erreur lors de la suppression : " + e.getMessage());
         }
+    }
+    //added by mahdi
+    @PostMapping("/create")
+    public ResponseEntity<Groupe> createGroupe(@RequestBody GroupeRequest request) {
+        Groupe groupe = groupeService.createGroupe(
+                request.getNomGroupe(),
+                request.getDateCreation(),
+                request.getVisibilite(),
+                request.getEtudiantIds(),
+                request.getProjetId(),
+                request.getRepoId(),
+                request.getNoteTGrpIds()
+        );
+        return ResponseEntity.ok(groupe);
+    }
+
+    // DTO for request
+    public static class GroupeRequest {
+        private String nomGroupe;
+        private Date dateCreation;
+        private Visibilite visibilite;
+        private List<Long> etudiantIds;
+        private Long projetId;
+        private Long repoId;
+        private List<Long> noteTGrpIds;
+
+        public String getNomGroupe() { return nomGroupe; }
+        public void setNomGroupe(String nomGroupe) { this.nomGroupe = nomGroupe; }
+        public Date getDateCreation() { return dateCreation; }
+        public void setDateCreation(Date dateCreation) { this.dateCreation = dateCreation; }
+        public Visibilite getVisibilite() { return visibilite; }
+        public void setVisibilite(Visibilite visibilite) { this.visibilite = visibilite; }
+        public List<Long> getEtudiantIds() { return etudiantIds; }
+        public void setEtudiantIds(List<Long> etudiantIds) { this.etudiantIds = etudiantIds; }
+        public Long getProjetId() { return projetId; }
+        public void setProjetId(Long projetId) { this.projetId = projetId; }
+        public Long getRepoId() { return repoId; }
+        public void setRepoId(Long repoId) { this.repoId = repoId; }
+        public List<Long> getNoteTGrpIds() { return noteTGrpIds; }
+        public void setNoteTGrpIds(List<Long> noteTGrpIds) { this.noteTGrpIds = noteTGrpIds; }
     }
 }

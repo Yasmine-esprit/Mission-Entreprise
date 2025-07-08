@@ -40,7 +40,11 @@ public class SecurityConfig {
                 }))
 
                 .csrf(AbstractHttpConfigurer::disable) // Disable CSRF as you are working with a stateless API
-                .authorizeHttpRequests(req -> req.anyRequest().permitAll())
+                .authorizeHttpRequests(req -> req
+                        .requestMatchers("/auth/**", "/ws/**").permitAll()
+                        .requestMatchers("/api/posts/**").permitAll()
+                        .anyRequest().permitAll()
+                )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);

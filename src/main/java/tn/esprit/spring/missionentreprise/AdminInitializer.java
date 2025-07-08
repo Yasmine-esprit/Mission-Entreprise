@@ -56,7 +56,7 @@ public class AdminInitializer implements CommandLineRunner {
         userRepository.save(admin);
         System.out.println("Admin user created: admin@example.com / admin123");
     }
-        
+       //tt 
 
 }
 

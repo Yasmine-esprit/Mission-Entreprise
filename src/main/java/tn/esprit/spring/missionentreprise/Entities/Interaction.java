@@ -2,11 +2,13 @@
 
 package tn.esprit.spring.missionentreprise.Entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
+import java.util.List;
 
 
 @Entity
@@ -21,13 +23,33 @@ import java.time.LocalDate;
 public class Interaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long idInteraction;
-    LocalDate dateInteraction;
-    TypeInteraction typeInteraction;
+    private Long idInteraction;
+
+    private LocalDate dateInteraction;
+    private Integer typeInteraction;
+
+    @Column(length = 500)
+    private String contenuInteraction;
 
     @ManyToOne
-    Post post;
+    @JoinColumn(name = "post_id_post")
+    @JsonIgnore
+    private Post post;
 
     @ManyToOne
-    User user;
+    @JoinColumn(name = "user_id_user")
+    @JsonIgnore
+    private User user;
+
+    @OneToMany(mappedBy = "interaction")
+    private List<Like> likes;
+
+    // getters and setters
+
+    public String getContenuInteraction() {
+        return contenuInteraction;
+    }
+    public void setContenuInteraction(String contenuInteraction) {
+        this.contenuInteraction = contenuInteraction;
+    }
 }

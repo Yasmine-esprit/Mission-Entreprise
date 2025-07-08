@@ -30,6 +30,7 @@ public class Etudiant extends User{
     Classe classe;
 
     @ManyToOne
+    @com.fasterxml.jackson.annotation.JsonBackReference
     Groupe groupe;
 
     @OneToMany(mappedBy = "etudiant")

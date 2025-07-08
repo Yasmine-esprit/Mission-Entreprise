@@ -35,6 +35,7 @@ public class Groupe {
     Projet projet;
 
     @OneToMany(mappedBy = "groupe")
+    @com.fasterxml.jackson.annotation.JsonManagedReference
     List<Etudiant> etudiants;
 
     @OneToMany(mappedBy = "groupe")
