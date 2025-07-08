@@ -29,9 +29,6 @@ public class Enseignant extends User{
     List <Projet> projets;
 
     @OneToMany(mappedBy = "enseignant")
-    List <NoteTGrp> noteTGrps;
-
-    @OneToMany(mappedBy = "enseignant")
-    List <NoteTIndiv> noteTIndiv;
+    List <GrilleEvaluation> grilleEvaluations;
 
 }

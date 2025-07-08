@@ -14,60 +14,80 @@ import java.util.List;
 @AllArgsConstructor
 public class CritereRestController {
 
-
-    private final CritereService critereService;
+    CritereService critereService;
 
     @PostMapping
-    public ResponseEntity<?> addCritere(@RequestBody Critere critere) {
+    public ResponseEntity<Critere> addCritere(@RequestBody Critere critere) {
         try {
             Critere savedCritere = critereService.add(critere);
-            return ResponseEntity.status(HttpStatus.CREATED)
-                    .body("Critere created successfully with ID: " + savedCritere.getIdCritere());
+            return new ResponseEntity<>(savedCritere, HttpStatus.CREATED);
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError()
-                    .body("Error creating critere: " + e.getMessage());
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
+    @PostMapping("/batch")
+    public ResponseEntity<List<Critere>> addAllCriteres(@RequestBody List<Critere> criteres) {
+        List<Critere> savedCriteres = critereService.addAll(criteres);
+        return new ResponseEntity<>(savedCriteres, HttpStatus.CREATED);
+    }
+
     @GetMapping("/{id}")
-    public ResponseEntity<?> getCritere(@PathVariable Long id) {
+    public ResponseEntity<Critere> getCritereById(@PathVariable Long id) {
         Critere critere = critereService.getById(id);
-        if (critere.getIdCritere() == 0L) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("Critere not found with ID: " + id);
-        }
-        return ResponseEntity.ok(critere);
+        return critere.getIdCritere() == 0L ?
+                new ResponseEntity<>(HttpStatus.NOT_FOUND) :
+                new ResponseEntity<>(critere, HttpStatus.OK);
     }
 
     @GetMapping
     public ResponseEntity<List<Critere>> getAllCriteres() {
-        return ResponseEntity.ok(critereService.getAll());
+        List<Critere> criteres = critereService.getAll();
+        return new ResponseEntity<>(criteres, HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateCritere(@PathVariable Long id, @RequestBody Critere critere) {
+    public ResponseEntity<Critere> updateCritere(@PathVariable Long id, @RequestBody Critere critere) {
         try {
             critere.setIdCritere(id);
-            Critere updated = critereService.edit(critere);
-            return ResponseEntity.ok("Critere updated successfully");
+            Critere updatedCritere = critereService.edit(critere);
+            return new ResponseEntity<>(updatedCritere, HttpStatus.OK);
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError()
-                    .body("Error updating critere: " + e.getMessage());
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
+    @PutMapping("/batch")
+    public ResponseEntity<List<Critere>> updateAllCriteres(@RequestBody List<Critere> criteres) {
+        List<Critere> updatedCriteres = critereService.editAll(criteres);
+        return new ResponseEntity<>(updatedCriteres, HttpStatus.OK);
+    }
+
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteCritere(@PathVariable Long id) {
-        try {
-            critereService.deleteById(id);
-            return ResponseEntity.ok("Criterniahauyhe deleted successfully idk what im ttypping but im trring my best to write sth for ");
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError()
-                    .body("Error deleting critere: " + e.getMessage());
-        }
+    public ResponseEntity<Void> deleteCritere(@PathVariable Long id) {
+        critereService.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @DeleteMapping
+    public ResponseEntity<Void> deleteCritere(@RequestBody Critere critere) {
+        critereService.delete(critere);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @DeleteMapping("/all")
+    public ResponseEntity<Void> deleteAllCriteres() {
+        critereService.deleteAll();
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/exists/{id}")
+    public ResponseEntity<Boolean> critereExists(@PathVariable Long id) {
+        return new ResponseEntity<>(critereService.existsById(id), HttpStatus.OK);
+    }
+
+    @GetMapping("/count")
+    public ResponseEntity<Long> countCriteres() {
+        return new ResponseEntity<>(critereService.count(), HttpStatus.OK);
     }
 }

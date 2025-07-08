@@ -1,11 +1,9 @@
 //Module Gestion Evaluation
 package tn.esprit.spring.missionentreprise.Entities;
 
-
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
 
 
 @Entity
@@ -18,22 +16,22 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 
 
-public class NoteTGrp {
+public class IndivEval {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long noteGrpId;
-
-    float noteTGrp;
+    Long indivEvalId;
 
     @ManyToOne
+            Critere critere;
+
+    float noteIndiv;
+
+    @OneToOne
     GrilleEvaluation grilleEvaluation;
 
     @ManyToOne
-    Groupe groupe;
-
-    @ManyToOne
-    Enseignant enseignant;
-
-    @ManyToOne
     Etudiant etudiant;
+
+    String generalComments;
+
 }

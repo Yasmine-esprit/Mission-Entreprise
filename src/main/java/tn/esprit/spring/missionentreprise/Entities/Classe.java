@@ -36,4 +36,7 @@ public class Classe {
     
     @OneToMany(mappedBy = "classe", cascade = CascadeType.ALL)
     List<Groupe> groupes;
+
+    @ManyToOne
+    GrilleEvaluation grilleEvaluation;
 }
