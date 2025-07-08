@@ -44,7 +44,18 @@ public class TacheController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
+<<<<<<< HEAD
+<<<<<<< HEAD
+    
+    @GetMapping("/Projets")
+    public ResponseEntity<?> getAll() {
+        try {
+            List<Tache> taches = tacheService.getAll();
+=======
+>>>>>>> 800784042b3a6f6955d33992fcb8e5a432132e7f
+=======
 
+>>>>>>> 09d40dcbf742febe9f850db30ba0e4a451c1a52e
 
     @GetMapping("/all")
     public ResponseEntity<List<Tache>> getAllTaches() {
