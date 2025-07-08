@@ -1,4 +1,4 @@
-//Module Gestion Organisation
+// Module Gestion Organisation
 
 package tn.esprit.spring.missionentreprise.Entities;
 
@@ -8,7 +8,6 @@ import lombok.experimental.FieldDefaults;
 
 import java.util.List;
 
-
 @Entity
 @Getter
 @Setter
@@ -17,11 +16,12 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-
 public class Classe {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long idCLasse;
+
     String nomClasse;
 
     @ManyToOne
@@ -29,4 +29,10 @@ public class Classe {
 
     @OneToMany(mappedBy = "classe")
     List<Etudiant> etudiants;
+
+    @OneToMany(mappedBy = "classe", cascade = CascadeType.ALL)
+    List<Groupe> groupes;
+
+    @ManyToOne
+    GrilleEvaluation grilleEvaluation;
 }

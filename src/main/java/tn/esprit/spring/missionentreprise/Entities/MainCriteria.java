@@ -7,6 +7,9 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 
 @Entity
@@ -19,24 +22,21 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 
 
-public class SousCritere {
+
+
+public class MainCriteria {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long idSousCritere;
+    Long idMainCritere;
     @Column(nullable = false)
-    String nameSousCritere;
+    String descMainCritere;
     @Column(nullable = false)
-    Long maxPoints;
-    @Enumerated(EnumType.STRING)
-    GradingLevels gradingLevels;
-    @Enumerated(EnumType.ORDINAL)
-    PoinRangesSubCrit poinRangesSubCrit;
-    @Enumerated(EnumType.STRING)
-    DescSubCriteria descSubCriteria;
-    Long noteMax;
-
+    Float MaxPoints;
     @ManyToOne
-    MainCriteria mainCritere;
+    Critere critere;
+
+    @OneToMany(mappedBy = "mainCritere", cascade = CascadeType.ALL, orphanRemoval = true)
+    List <SousCritere> sousCriteres = new ArrayList<>();
 
 
 

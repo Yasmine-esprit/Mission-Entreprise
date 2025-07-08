@@ -37,8 +37,8 @@ public class Groupe {
     @OneToMany(mappedBy = "groupe")
     List<Etudiant> etudiants;
 
-    @OneToMany(mappedBy = "groupe")
-    List<NoteTGrp> noteTGrps;
+    @ManyToOne
+    GrilleEvaluation grilleEvaluation;
 
     @OneToOne(mappedBy = "groupe")
     Repo repo;
