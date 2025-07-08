@@ -20,8 +20,8 @@ import java.util.List;
 public class Etudiant extends User {
 
     String matricule;
-    String niveau;        // Ex : L3, M1, M2
-    String specialite;    // Info, GTR, etc.
+    String niveau;      // Ex : L3, M1, M2
+    String specialite;  // Info, GTR, etc.
     LocalDate dateNaissance;
 
     @ManyToOne
@@ -33,7 +33,6 @@ public class Etudiant extends User {
     @OneToMany(mappedBy = "etudiant")
     List<Tache> taches;
 
-    /* Évaluations */
     @OneToMany(mappedBy = "etudiant")
     List<IndivEval> noteIndiv;
 
