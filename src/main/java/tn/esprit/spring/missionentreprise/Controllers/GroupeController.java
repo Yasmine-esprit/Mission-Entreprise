@@ -8,24 +8,38 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tn.esprit.spring.missionentreprise.Entities.Groupe;
+import tn.esprit.spring.missionentreprise.Entities.Visibilite;
 import tn.esprit.spring.missionentreprise.Services.GroupeService;
 
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
-@RequestMapping("/api/groupes")
+@RequestMapping("/api/groupe")
 @AllArgsConstructor
 public class GroupeController {
     private final GroupeService groupeService;
 
-    @PostMapping("/AddGroupe")
-    public ResponseEntity<?> add(@RequestBody Groupe groupe) {
+    @PostMapping("/AddGroupeWithStudentsByEmail")
+    public ResponseEntity<?> addWithStudentsByEmail(@RequestBody Map<String, Object> request) {
         try {
-            Groupe savedGroupe = groupeService.add(groupe);
+            Map<String, Object> groupeData = (Map<String, Object>) request.get("groupe");
+            Groupe groupe = new Groupe();
+            groupe.setNomGroupe((String) groupeData.get("nomGroupe"));
+            groupe.setVisibilite(Visibilite.valueOf((String) groupeData.get("visibilite")));
+
+            List<String> studentEmails = (List<String>) request.get("studentEmails");
+            Set<String> emails = new HashSet<>(studentEmails);
+
+            Groupe savedGroupe = groupeService.createGroupWithStudentsByEmail(groupe, emails);
             return ResponseEntity.ok(savedGroupe);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Erreur lors de la création : " + e.getMessage());
+            return ResponseEntity.badRequest().body("Erreur création groupe: " + e.getMessage());
         }
     }
     @GetMapping("/groupes")
@@ -48,7 +62,7 @@ public class GroupeController {
         }
     }
 
-    @GetMapping("/groupes/{id}")
+    @GetMapping("/groupe/{id}")
     public ResponseEntity<?> getGroupeById(@PathVariable Long id) {
         try {
             Groupe groupe = groupeService.getById(id);
@@ -64,7 +78,7 @@ public class GroupeController {
         }
     }
 
-    @PutMapping("/Editgroupes/{id}")
+    @PutMapping("/Editgroupe/{id}")
     public ResponseEntity<?> edit(@PathVariable Long id, @RequestBody Groupe updatedGroupe) {
         try {
             Groupe existing = groupeService.getById(id);
@@ -83,7 +97,7 @@ public class GroupeController {
     }
 
 
-    @DeleteMapping("/Deletegroupes/{id}")
+    @DeleteMapping("/Deletegroupe/{id}")
     public ResponseEntity<?> deleteById(@PathVariable Long id) {
         try {
             Groupe existing = groupeService.getById(id);
@@ -115,6 +129,18 @@ public class GroupeController {
 
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Erreur lors de la suppression : " + e.getMessage());
+        }
+    }
+    
+    @GetMapping("/classe/{classeId}")
+    public ResponseEntity<?> getGroupesByClasse(@PathVariable Long classeId) {
+        try {
+            List<Groupe> groupes = groupeService.getGroupesByClasse(classeId);
+            return ResponseEntity.ok(groupes);
+        } catch (Exception e) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body("Erreur lors de la récupération : " + e.getMessage());
         }
     }
 }

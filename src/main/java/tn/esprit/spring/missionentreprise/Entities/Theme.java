@@ -34,6 +34,14 @@ public class Theme {
 
     @ManyToOne
     Module module;
+    
+    @ManyToOne
+    @JoinColumn(name = "classe_id")
+    Classe classe;
+
+    @ManyToOne
+    @JoinColumn(name = "groupe_id")
+    Groupe groupe;
 
     @OneToMany(mappedBy = "theme", cascade = CascadeType.ALL, orphanRemoval = true)
     List <Projet> projets = new ArrayList<>();

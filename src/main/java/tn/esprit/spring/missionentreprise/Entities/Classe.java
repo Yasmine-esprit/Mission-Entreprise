@@ -26,7 +26,17 @@ public class Classe {
 
     @ManyToOne
     Niveau niveau;
+    
+    @ManyToOne
+    @JoinColumn(name = "departement_id")
+    Departement departement;
 
     @OneToMany(mappedBy = "classe")
     List<Etudiant> etudiants;
+    
+    @OneToMany(mappedBy = "classe", cascade = CascadeType.ALL)
+    List<Groupe> groupes;
+
+    @ManyToOne
+    GrilleEvaluation grilleEvaluation;
 }

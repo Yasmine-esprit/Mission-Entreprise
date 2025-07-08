@@ -47,6 +47,16 @@ public class Role implements GrantedAuthority {
     @Column(insertable = false)
     LocalDateTime lastmodifiedDate;
 
+    @PrePersist
+    protected void onCreate() {
+        createdDate = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        lastmodifiedDate = LocalDateTime.now();
+    }
+
     @Override
     public String getAuthority() {
         return roleType.name(); // or return roleType.toString();

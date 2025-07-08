@@ -15,6 +15,7 @@ import tn.esprit.spring.missionentreprise.Utils.UserDTO;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/users/")
@@ -56,7 +57,6 @@ public class UserController {
         userService.edit(user);
         return ResponseEntity.ok("User updated successfully");
     }
-
     @GetMapping("{userId}")
     public ResponseEntity<?> getUser(@PathVariable Long userId){
         try {
@@ -107,5 +107,29 @@ public class UserController {
       } catch (Exception e) {
           return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
       }
+    }
+    @GetMapping("/EtudiantByName")
+    public List<UserDTO> searchEtudiantsByName(@RequestParam String searchTerm) {
+        String searchLower = searchTerm.toLowerCase();
+        List<User> users = userService.searchEtudiantsByName(searchLower);
+
+        return users.stream()
+                .filter(user -> user.getRoles().contains("ETUDIANT"))
+                .filter(user -> user.isEnabledUser())
+                .filter(user -> !user.isAccountLockedUser())
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+    private UserDTO convertToDTO(User user) {
+        return UserDTO.builder()
+                .idUser(user.getIdUser())
+                .nomUser(user.getNomUser())
+                .prenomUser(user.getPrenomUser())
+                .emailUser(user.getEmailUser())
+                .enabledUser(user.isEnabledUser())
+                .accountLockedUser(user.isAccountLockedUser())
+                .roles(user.getRoles().stream().map(Object::toString).collect(Collectors.toList()))
+                .photoProfil(user.getPhotoProfil())
+                .build();
     }
 }

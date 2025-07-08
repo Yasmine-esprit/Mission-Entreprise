@@ -39,4 +39,24 @@ public class ThemeController {
     public void supprimerTheme(@PathVariable Long id) {
         themeService.supprimerTheme(id);
     }
+
+    @GetMapping("/classe/{classeId}")
+    public List<Theme> getThemesByClasse(@PathVariable Long classeId) {
+        return themeService.getThemesByClasse(classeId);
+    }
+
+    @GetMapping("/groupe/{groupeId}")
+    public List<Theme> getThemesByGroupe(@PathVariable Long groupeId) {
+        return themeService.getThemesByGroupe(groupeId);
+    }
+
+    @PostMapping("/{themeId}/associer-classe/{classeId}")
+    public Theme associerThemeAClasse(@PathVariable Long themeId, @PathVariable Long classeId) {
+        return themeService.associerThemeAClasse(themeId, classeId);
+    }
+
+    @PostMapping("/{themeId}/associer-groupe/{groupeId}")
+    public Theme associerThemeAGroupe(@PathVariable Long themeId, @PathVariable Long groupeId) {
+        return themeService.associerThemeAGroupe(themeId, groupeId);
+    }
 }

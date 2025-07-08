@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import tn.esprit.spring.missionentreprise.Entities.User;
+import tn.esprit.spring.missionentreprise.Entities.roleName;
 import tn.esprit.spring.missionentreprise.Repositories.UserRepository;
 import tn.esprit.spring.missionentreprise.Utils.TokenRepository;
 import tn.esprit.spring.missionentreprise.Utils.UserDTO;
@@ -166,4 +167,14 @@ public class UserService implements IServiceGenerique<User> {
 
 
     }
+
+    //ajoutés par YassminT pour récupération des etudiants
+    public List<User> getAllEtudiants() {
+        return userRepository.findByRoleTypeAndEnabledAndNotLocked(roleName.ETUDIANT);
+    }
+
+    public List<User> searchEtudiantsByName(String searchTerm) {
+        return userRepository.findEtudiantsByNameOrEmailContaining(searchTerm);
+    }
+
 }

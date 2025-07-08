@@ -1,15 +1,12 @@
-
-//Module Gestion de l'espace collaboratif
-
 package tn.esprit.spring.missionentreprise.Entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDate;
-
 
 @Entity
 @Getter
@@ -19,9 +16,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-
 public class SousTache {
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,5 +35,7 @@ public class SousTache {
     Statut statut;
 
     @ManyToOne
+    @JoinColumn(name = "tache_id")
+    @JsonBackReference
     Tache tache;
 }
