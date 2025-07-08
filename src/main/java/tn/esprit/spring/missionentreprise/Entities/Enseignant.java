@@ -23,14 +23,12 @@ public class Enseignant extends User{
     String grade;
     String demainRecherche; // Ex: L3, M1, M2
     String Bureau; // Info, GTR, etc.
+    String specialite;
 
     @OneToMany(mappedBy = "enseignant")
     List <Projet> projets;
 
     @OneToMany(mappedBy = "enseignant")
-    List <NoteTGrp> noteTGrps;
-
-    @OneToMany(mappedBy = "enseignant")
-    List <NoteTIndiv> noteTIndiv;
+    List <GrilleEvaluation> grilleEvaluations;
 
 }

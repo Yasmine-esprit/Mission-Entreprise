@@ -33,12 +33,17 @@ public class Groupe {
     @OneToOne
     @JoinColumn(name = "projet_id")
     Projet projet;
+    
+    @ManyToOne
+    @JoinColumn(name = "classe_id")
+    Classe classe;
 
     @OneToMany(mappedBy = "groupe", cascade = CascadeType.ALL)
     List<Etudiant> etudiants;
 
-    @OneToMany(mappedBy = "groupe", cascade = CascadeType.ALL)
-    List<NoteTGrp> noteTGrps;
+    @ManyToOne
+    GrilleEvaluation grilleEvaluation;
+
 
     @OneToOne(mappedBy = "groupe", cascade = CascadeType.ALL)
     Repo repo;

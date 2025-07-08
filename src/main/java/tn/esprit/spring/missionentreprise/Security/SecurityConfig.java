@@ -44,6 +44,7 @@ public class SecurityConfig {
 
                 .csrf(csrf -> csrf.disable())  // Keep CSRF disabled for stateless API
                 .authorizeHttpRequests(req ->
+
                         req.requestMatchers("/auth/**", "/register", "/ws/**"// Keep this public if needed
                                 ).permitAll()
                                 .requestMatchers("/messages/**", "/groupes/**", "/users/**", "/groupe/**"

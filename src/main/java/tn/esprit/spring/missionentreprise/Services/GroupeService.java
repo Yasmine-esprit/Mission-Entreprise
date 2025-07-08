@@ -82,6 +82,10 @@ public class GroupeService implements IServiceGenerique<Groupe> {
     public void deleteAll() {
         groupeRepository.deleteAll();
     }
+    
+    public List<Groupe> getGroupesByClasse(Long classeId) {
+        return groupeRepository.findByClasse_IdCLasse(classeId);
+    }
 
     @Override
     public void deleteById(Long id) {

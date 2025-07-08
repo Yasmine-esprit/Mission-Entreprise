@@ -39,4 +39,14 @@ public class ClasseController {
     public void supprimerClasse(@PathVariable Long id) {
         classeService.supprimerClasse(id);
     }
+    
+    @GetMapping("/departement/{departementId}")
+    public List<Classe> getClassesByDepartement(@PathVariable Long departementId) {
+        return classeService.getClassesByDepartement(departementId);
+    }
+    
+    @GetMapping("/niveau/{niveauId}")
+    public List<Classe> getClassesByNiveau(@PathVariable Long niveauId) {
+        return classeService.getClassesByNiveau(niveauId);
+    }
 }

@@ -45,6 +45,7 @@ public class TacheController {
         }
     }
 
+
     @GetMapping("/all")
     public ResponseEntity<List<Tache>> getAllTaches() {
         return ResponseEntity.ok(tacheService.getAll());
@@ -60,6 +61,27 @@ public class TacheController {
             return ResponseEntity.ok(createdTache);
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(null);
+        }
+    }
+    
+    // ✅ Ajout endpoint /all pour compatibilité frontend
+    @GetMapping("/all")
+    public ResponseEntity<?> getAllTaches() {
+        try {
+            List<Tache> taches = tacheService.getAll();
+
+            if (taches.isEmpty()) {
+                return ResponseEntity
+                        .status(HttpStatus.OK)
+                        .body("Aucune tâche n'est trouvée.");
+            }
+
+            return ResponseEntity.ok(taches);
+
+        } catch (Exception e) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body("Une erreur est survenue : " + e.getMessage());
         }
     }
 

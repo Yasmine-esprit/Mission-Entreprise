@@ -25,19 +25,27 @@ public class Etudiant extends User{
     String niveau; // Ex: L3, M1, M2
     String specialite; // Info, GTR, etc.
     LocalDate dateNaissance;
+    Boolean choixEffectue = false;
 
     @ManyToOne
     Classe classe;
 
     @ManyToOne
     Groupe groupe;
+    
+    @ManyToOne
+    @JoinColumn(name = "theme_choisi_id")
+    Theme themeChoisi;
 
     @OneToMany(mappedBy = "etudiant")
     List<Tache> taches;
 
 
     @OneToMany(mappedBy = "etudiant")
-    List <NoteTIndiv> noteTIndiv;
 
+    List <IndivEval> noteIndiv;
+
+    @OneToMany(mappedBy = "etudiant")
+    List <GroupEval> groupEvals;
 
 }

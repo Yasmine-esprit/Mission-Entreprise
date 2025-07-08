@@ -1,10 +1,12 @@
-//Module Gestion Evaluation
+//Module Gestion Organisation
+
 package tn.esprit.spring.missionentreprise.Entities;
 
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.List;
 
 @Entity
 @Getter
@@ -14,22 +16,18 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-
-
-public class NoteTIndiv {
+public class Departement {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long noteIndivId;
-
-    float noteTIndiv;
-
+    Long idDepartement;
+    
+    String nomDepartement;
+    String description;
+    
     @ManyToOne
-    GrilleEvaluation grilleEvaluation;
-
-    @ManyToOne
-    Enseignant enseignant;
-
-    @ManyToOne
-    Etudiant etudiant;
-
+    @JoinColumn(name = "institution_id")
+    Institution institution;
+    
+    @OneToMany(mappedBy = "departement", cascade = CascadeType.ALL)
+    List<Classe> classes;
 }

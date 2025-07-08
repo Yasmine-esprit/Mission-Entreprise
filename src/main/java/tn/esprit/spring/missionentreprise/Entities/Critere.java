@@ -27,12 +27,19 @@ public class Critere {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long idCritere;
     @Column(nullable = false)
+    String titreCritere;
+    @Column(nullable = false)
+    String codeCritere;
+    @Column(nullable = false)
     String descriptionCritere;
     @Column(nullable = false)
-    float noteMaxCritere;
+    float TotalPoints;
 
     @OneToMany(mappedBy = "critere", cascade = CascadeType.ALL, orphanRemoval = true)
-    List <SousCritere> sousCriteres = new ArrayList<>();
+    List <MainCriteria> mainCriteria = new ArrayList<>();
+
+    @OneToMany(mappedBy = "critere", cascade = CascadeType.ALL, orphanRemoval = true)
+    List <IndivEval> indivEvals = new ArrayList<>();
 
     @ManyToOne
     GrilleEvaluation grilleEvaluation;
